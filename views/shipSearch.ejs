@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>shipSearch</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'wesr’,title:'操作'，split:true" style ="width:200px;">
+        <ul id="nav" calss="nav">
+            <li>
+                <a href="javascript:void(0);"target="html/box.html">矩形查询</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);"target="html/path.html">轨迹查询</a>
+            </li>
+        </ul>
+    </div>
+    <div data-options="region:'center'" style="padding: 5px" >
+        <%/**引入map页面**/%>
+        <%include shipMap.ejs%>
+    </div>
+<script>
+    function find() {
+        var data={};
+        data.handle="find";
+        data.col="shipdyna";
+        data.docs="{''}";
+        data.size=1;
+        $.ajax({
+            url:"/ship",
+            type:"post",
+            data:data,
+            dataType:"json",
+            success:function(r){
+                showData(null,r);
+            }
+        });
+    }
+</script>
+</body>
+
+</html>

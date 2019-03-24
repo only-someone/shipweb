@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<body>
+<div class="easyui-layout" id="mainPannel" style="width:100%;height:100%">
+    <div tittle="Tab1" style="padding : 5px">
+        <div id="container" style="width:1024px;height:380px;overflow:auto" >
+        </div>
+    </div>
+    <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=7BTBZ-DY5EJ-PGPFQ-KOQSP-P45NT-NHBRG&libraries=drawing,geometry,place,convertor,visualization
+"></script>
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        var map;
+        var init=function(index){
+            var center =new soso.maps.LatLng(31.50806,121.3984);
+            map=new soso.maps.Map($("#container")[0],{
+                center:center,
+                zoom:8
+            });
+        }
+        $(function(){init(0);});
+    </script>
+    <script type="text/javascript">
+        function  find() {
+            var bounds=map.getBounds();
+            if(bounds){
+                var NELat=bounds.getNorthEast().getLat();
+                var NELng=bounds.getNorthEast().getLng();
+                var SWLat=bounds.getSouthWest().getLat();
+                var SWLng=bounds.getSouthWest().getLng();
+            }
+            var docs="{'GPS':{'$whthin':{'$box':+[["+SWLng+","+SWLat+"],["+NELng+","+NELat+"]]}}}";
+            var data={};
+            data.handle="find";
+            data.col="shipdyna";
+            data.docs=docs;
+            data.size=1000;
+            $ajax({
+                url:"/ship",
+                type:"post",
+                data:data,
+                dataType:"json",
+                success:function(r){
+                    showData(null,r);
+                }
+            });
+        }
+        function showData(center,obj) {
+            var data=obj.data;
+            if($.type(data)=="array"){
+                for(var x in data){
+                    (function(n){
+                       var GPS=data[x]["GPS"];
+                       if(GPS){
+                           var tittle=data[x].中文名+":("+data[x]["MMSI"]+")"+"[经度:"+GPS[1]+",纬度:"+GPS[0]+"]";
+                           var latLng=new soso.maps.LatLng(GPS[1],GPS[0]);
+                           var marker=new qq.maps.Marker({
+                               postition:latLng,
+                               map:map,
+                               tittle:tittle
+                           });
+                        }
+                    })(x);
+                }
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
