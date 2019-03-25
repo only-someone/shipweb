@@ -1,15 +1,15 @@
 const ship=require("./mongoose/models/ship");
-let mongo_find={
+let mogo_ship={
     findByname:(req,res)=>{
         let{shipname}=req.body
-        let p =Promise((resolve,reject)=>{
-            ship.find({'中文名':shipname},(ree,doc)=>{
+        console.log(shipname);
+        let p =new Promise((resolve,reject)=>{
+            ship.find({},(err,doc)=>{
                 if(err){reject(err)}
                 resolve(doc)
             })
         })
         return p;
     },
-
 }
-module.exports = {mongo_find}
+module.exports = mogo_ship;

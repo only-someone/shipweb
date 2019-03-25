@@ -1,10 +1,9 @@
-let mongo_find = require("./mongooseDeal");
+let mongo_ship = require("./mongooseDeal");
 const SHIP_SERVER={
-    find_byid:(res,req)=>{
-        mongo_find.findByname(req,res).then(doc=>{
+    find_byname:(res,req)=>{
+        mongo_ship.findByname(req,res).then(doc=>{
             console.log(doc)
             res.json({
-                code:1,
                 res:doc
             })
         })

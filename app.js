@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var shipRouter = require('./routes/shipSearch');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -36,10 +36,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.get('/ship', shipRouter);
+
 
 app.post('/ship', (req,res)=>{
-    SHIP_SERVER.find_byid(res,req);
+    SHIP_SERVER.find_byname(res,req);
 });
 
 // catch 404 and forward to error handler
