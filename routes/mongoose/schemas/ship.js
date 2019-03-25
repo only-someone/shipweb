@@ -14,6 +14,5 @@ var Shipschema=new mongoose.Schema({
     '中文名':String,
     '公司':String,
 
-},{collection: 'student'
-})
+},{collection:'shipinfo'})
 module.exports=Shipschema;
