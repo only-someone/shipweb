@@ -4,6 +4,7 @@ module.exports = router;
 var MongoClient=require('mongodb').MongoClient;
 var url='mongodb://localhost:27017/ship';
 
+
 var find=function(res,db,col,docs,size,callback){
     var obj={};
     try{
@@ -27,11 +28,12 @@ var find=function(res,db,col,docs,size,callback){
         res.end(obj);
     }
 }
-var update=function(res,db,col,docs,size,callback){
+
+var find_byid=function(res,id){
     var obj={};
     try{
-        var collection=db.collection(col);
-        var cursor=collection.find(docs);
+        var collection=db.collection('shipinfo');
+        var cursor=collection.find({_id:id});
         cursor.limit(parseInt(size)).toArray(function (err,result) {
             if(err){
                 obj.msg=err;
@@ -47,32 +49,7 @@ var update=function(res,db,col,docs,size,callback){
         obj.msg=e.toString();
         console.log("find 错误");
         console.log(e);
-        res.json(obj);
-
-    }
-}
-var del=function(res,db,col,docs,size,callback){
-    var obj={};
-    try{
-        var collection=db.collection(col);
-        var cursor=collection.find(docs);
-        cursor.limit(parseInt(size)).toArray(function (err,result) {
-            if(err){
-                obj.msg=err;
-                console.log(err);
-            }else{
-                obj.data==result;
-                obj.suc=true;
-            }
-            db.close();
-            res.json(obj);
-        });
-    }catch (e) {
-        obj.msg=e.toString();
-        console.log("find 错误");
-        console.log(e);
-        res.json(obj);
-
+        res.end(obj);
     }
 }
 router.get('/ship',function(req,res,next){
@@ -80,6 +57,7 @@ router.get('/ship',function(req,res,next){
     console.log(req.body.col);
     console.log(req.body.docs);
     var size=req.body["size"];
+    console.log(size);
     var docs={};
     if(req.body.docs){
         try{

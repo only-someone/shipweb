@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var db=mongoose.connect('mongodb://localhoost/ship');
 var ShipBasicSchema=new mongoose.Schema({
     MMSI:String,
     GPS:{
