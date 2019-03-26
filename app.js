@@ -39,8 +39,23 @@ app.use('/users', usersRouter);
 
 
 app.post('/ship', (req,res)=>{
-    SHIP_SERVER.find_byname(res,req);
+    SHIP_SERVER.find(res,req);
 });
+app.get('/ship.html', (req,res)=>{
+    //var shipinfo=SHIP_SERVER.findall(res,req);
+    res.sendFile( __dirname  + "/views/ship.html" );
+});
+app.post('/shipdetail', (req,res)=>{
+    SHIP_SERVER.finddetail(res,req);
+});
+app.post('/shiphis', (req,res)=>{
+    SHIP_SERVER.findhis(res,req);
+});
+app.get('/all', (req,res)=>{
+    console.log("all")
+    SHIP_SERVER.findall(res,req);
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

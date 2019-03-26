@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <style type="text/css">
+        body,html,#container{
+            width: 100%;
+            height: 100%;
+            margin: 0px
+        }
+    </style>
+    <title>API加载</title>
+</head>
+<body>
+<div id="container" tabindex="0"></div>
+<script type="text/javascript">
+    window.init = function(){
+        console.log("da")
+        //getallship();
+        console.log("da")
+        var map = new AMap.Map('container', {
+            resizeEnable: true,
+            center:[116.480983, 32.989628],
+            zoom:5
+            //viewmode:"3D"
+        });
+        console.log("da")
+        getallship();
+        console.log("da")
+        if (location.href.indexOf('guide=1') !== -1) {
+            map.setStatus({scrollWheel: false});
+            map.plugin(["AMap.ToolBar"], function() {
+                map.addControl(new AMap.ToolBar({liteStyle:true}))
+            });
+        }
+    }
+
+</script>
+<script src="https://webapi.amap.com/maps?v=1.4.13&key=a9b1c7de9e96206b1d3f36843adbfb2c&callback=init"></script>
+<script type="text/javascript">
+    $(function getallship() {
+        $.ajax({
+            url:'127.0.0.1:3000/all',
+            type:'GET',
+            dataType: 'json',
+            success: function (response) {
+                console.log(response)
+                var jsons = $.parseJSON(response);
+                for(var doc in jsons){
+                    var  marker=new AMap.Marker({
+                        postion:doc.GPS,
+                    });
+                    console.log("ajax")
+                    marker.setMap(map);
+                }
+            }
+        })
+    });
+</script>
+</body>
+</html>
