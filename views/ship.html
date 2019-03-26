@@ -13,51 +13,105 @@
     </style>
     <title>API加载</title>
 </head>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <body>
+<script src="https://webapi.amap.com/maps?v=1.4.13&key=a9b1c7de9e96206b1d3f36843adbfb2c&callback=init"></script>
 <div id="container" tabindex="0"></div>
 <script type="text/javascript">
-    window.init = function(){
-        console.log("da")
-        //getallship();
-        console.log("da")
-        var map = new AMap.Map('container', {
-            resizeEnable: true,
-            center:[116.480983, 32.989628],
-            zoom:5
-            //viewmode:"3D"
-        });
-        console.log("da")
-        getallship();
-        console.log("da")
-        if (location.href.indexOf('guide=1') !== -1) {
-            map.setStatus({scrollWheel: false});
-            map.plugin(["AMap.ToolBar"], function() {
-                map.addControl(new AMap.ToolBar({liteStyle:true}))
-            });
-        }
-    }
-
 </script>
-<script src="https://webapi.amap.com/maps?v=1.4.13&key=a9b1c7de9e96206b1d3f36843adbfb2c&callback=init"></script>
-<script type="text/javascript">
-    $(function getallship() {
-        $.ajax({
-            url:'127.0.0.1:3000/all',
-            type:'GET',
-            dataType: 'json',
-            success: function (response) {
-                console.log(response)
-                var jsons = $.parseJSON(response);
-                for(var doc in jsons){
-                    var  marker=new AMap.Marker({
-                        postion:doc.GPS,
-                    });
-                    console.log("ajax")
-                    marker.setMap(map);
-                }
+<script  type="text/javascript">
+    $.ajax({
+        url: '/all',
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            //alert(JSON.stringify(response["res"]))
+            //alert(response["res"])
+            var map = new AMap.Map('container', {
+                resizeEnable: true,
+                center:[120.480983, 32.989628],
+                zoom:5,
+                mapStyle: 'amap://styles/whitesmoke',
+                //viewMode: '3D',
+            });
+            for(var doc in response["res"]){
+                var marker = new AMap.Marker({
+                    position:response["res"][doc]["GPS"]//位置
+                })
+                map.add(marker);//添加到地图
+                //alert(response["res"][doc]["MMSI"])
+                var content=getshipinfo(response["res"][doc]["MMSI"])
+                content=[" sad "]
+                var infoWindow = new AMap.InfoWindow({
+                    content: content.join("<br/>"),
+                });
+                AMap.event.addListener(marker, 'click', function () {
+                    infoWindow.open(map, marker.getPosition());
+                });
+                //getshipinfo(response["res"][doc]["MMSI"])
+                map.add(marker);//添加到地图
+                //var tittle="chuanboming"
+
+            }
+        }
+    })
+    function getshipinfo(shipid){
+        var data={"id":shipid};
+        $ajax({
+            url:"/ship",
+            type:"post",
+            data:data,
+            dataType: "json",
+            success:function(response){
+                shipinfo=response["res"];
+                allert(response["res"])
+                return shipinfo;
             }
         })
-    });
+    }
+    function createInfoWindow(title, content) {
+        var info = document.createElement("div");
+        info.className = "custom-info input-card content-window-card";
+
+        //可以通过下面的方式修改自定义窗体的宽高
+        //info.style.width = "400px";
+        // 定义顶部标题
+        var top = document.createElement("div");
+        var titleD = document.createElement("div");
+        var closeX = document.createElement("img");
+        top.className = "info-top";
+        titleD.innerHTML = title;
+        closeX.src = "https://webapi.amap.com/images/close2.gif";
+        closeX.onclick = closeInfoWindow;
+
+        top.appendChild(titleD);
+        top.appendChild(closeX);
+        info.appendChild(top);
+
+        // 定义中部内容
+        var middle = document.createElement("div");
+        middle.className = "info-middle";
+        middle.style.backgroundColor = 'white';
+        middle.innerHTML = content;
+        info.appendChild(middle);
+
+        // 定义底部内容
+        var bottom = document.createElement("div");
+        bottom.className = "info-bottom";
+        bottom.style.position = 'relative';
+        bottom.style.top = '0px';
+        bottom.style.margin = '0 auto';
+        var sharp = document.createElement("img");
+        sharp.src = "https://webapi.amap.com/images/sharp.png";
+        bottom.appendChild(sharp);
+        info.appendChild(bottom);
+        return info;
+    }
+
+    //关闭信息窗体
+    function closeInfoWindow() {
+        map.clearInfoWindow();
+    }
 </script>
 </body>
 </html>
