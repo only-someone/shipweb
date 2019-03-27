@@ -1,36 +1,36 @@
 $(document).ready(function() {
-    $.ajax({
-        url: '/all',
-        type: 'GET',
-        dataType: 'json',
-        success: function (response) {
-            var map = new AMap.Map('container', {
-                resizeEnable: true,
-                center: [120.480983, 32.989628],
-                zoom: 5,
-                mapStyle: 'amap://styles/whitesmoke',
-            });
-            for (var doc in response["res"]) {
-                var marker = new AMap.Marker({
-                    position: response["res"][doc]["GPS"],//位置
-                    map: map,
-                })
-                //alert(response["res"][doc]["MMSI"])
-                // var content=getshipinfo(response["res"][doc]["MMSI"])
-                var content = [" sad " + response["res"][doc]["GPS"]]
-                AMap.event.addListener(marker, 'click', function () {
-                    getshipinfo(response["res"][doc]["MMSI"])
-                    var infoWindow = new AMap.InfoWindow({
-                        content: content.join("<br/>"),
-                    });
-                    infoWindow.open(map, response["res"][doc]["GPS"]);
-                });
-                marker.setMap(map);//添加到地图
-                //var tittle="chuanboming"
-            }
-        }
-    })
-})
+  $.ajax({
+    url: "/all",
+    type: "GET",
+    dataType: "json",
+    success: function(response) {
+      var map = new AMap.Map("container", {
+        resizeEnable: true,
+        center: [120.480983, 32.989628],
+        zoom: 5,
+        mapStyle: "amap://styles/whitesmoke"
+      });
+      for (var doc in response["res"]) {
+        var marker = new AMap.Marker({
+          position: response["res"][doc]["GPS"], //位置
+          map: map
+        });
+        //alert(response["res"][doc]["MMSI"])
+        // var content=getshipinfo(response["res"][doc]["MMSI"])
+        var content = [" sad " + response["res"][doc]["GPS"]];
+        AMap.event.addListener(marker, "click", function() {
+          getshipinfo(response["res"][doc]["MMSI"]);
+          var infoWindow = new AMap.InfoWindow({
+            content: content.join("<br/>")
+          });
+          infoWindow.open(map, response["res"][doc]["GPS"]);
+        });
+        marker.setMap(map); //添加到地图
+        //var tittle="chuanboming"
+      }
+    }
+  });
+});
 /*
 function createInfoWindow(title, content) {
     var info = document.createElement("div");
@@ -74,20 +74,20 @@ function createInfoWindow(title, content) {
 
 //关闭信息窗体
 function closeInfoWindow() {
-    map.clearInfoWindow();
+  map.clearInfoWindow();
 }
 
-function getshipinfo(shipid){
-    var data={"id":shipid};
-    $.ajax({
-        url:"/ship",
-        type:"POST",
-        data:data,
-        dataType: "json",
-        success:function(response){
-            shipinfo=response["res"];
-            allert(response["res"])
-            return shipinfo;
-        }
-    })
+function getshipinfo(shipid) {
+  var data = { id: shipid };
+  $.ajax({
+    url: "/ship",
+    type: "POST",
+    data: data,
+    dataType: "json",
+    success: function(response) {
+      shipinfo = response["res"];
+      allert(response["res"]);
+      return shipinfo;
+    }
+  });
 }
