@@ -20,6 +20,7 @@
 <div id="container" tabindex="0"></div>
 <script type="text/javascript">
     $(document).ready(function() {
+
         $.ajax({
             url: '/all',
             type: 'GET',
@@ -38,37 +39,64 @@
                     })
                     //alert(response["res"][doc]["MMSI"])
                     // var content=getshipinfo(response["res"][doc]["MMSI"])
-                    var content = [" sad " + response["res"][doc]["GPS"]]
-                    AMap.event.addListener(marker, 'click', function () {
-                        content=getshipinfo(response["res"][doc]["MMSI"])
-                        var infoWindow = new AMap.InfoWindow({
-                            content: content.join("<br/>"),
+                    // var content = [" sad " + response["res"][doc]["GPS"]]
+                    getshipinfo(response["res"][doc]["MMSI"]).then(function(shipinfo){
+                        AMap.event.addListener(marker, 'click', function () {
+                            // content=getshipinfo(response["res"][doc]["MMSI"])
+                            content = shipinfo
+                            var infoWindow = new AMap.InfoWindow({
+                                content: content.join("<br/>"),
+                            });
+                            infoWindow.open(map, response["res"][doc]["GPS"]);
                         });
-                        infoWindow.open(map, response["res"][doc]["GPS"]);
-                    });
-                    marker.setMap(map);//添加到地图
+                        marker.setMap(map);//添加到地图
+                    })
+                    // AMap.event.addListener(marker, 'click', function () {
+                    //     // content=getshipinfo(response["res"][doc]["MMSI"])
+                    //     var infoWindow = new AMap.InfoWindow({
+                    //         content: content.join("<br/>"),
+                    //     });
+                    //     infoWindow.open(map, response["res"][doc]["GPS"]);
+                    // });
+                    // marker.setMap(map);//添加到地图
                     //var tittle="chuanboming"
                 }
             }
         })
     })
-    var shipinfo;
     getshipinfo=function(shipid){
         var data={"id":shipid};
-        $ajax({
-            url:"/ship",
-            type:"POST",
-            data:data,
-            dataType: "json",
-            error:function(){
-                alert("asdj")
-            },
-            success:function(response){
-                shipinfo=response["res"];
-                allert(response["res"])
-            }
-        });
-        promise(shipinfo) ;
+        return new Promise(function(resolve, reject) {
+             $ajax({
+                url:"/ship",
+                type:"POST",
+                data:data,
+                dataType: "json",
+                error:function(){
+                    alert("asdj")
+                },
+                success:function(response){
+                    shipinfo=response["res"];
+                    allert(response["res"])
+                    resolve(shipinfo);
+                }
+            });
+        })
+
+        // $ajax({
+        //     url:"/ship",
+        //     type:"POST",
+        //     data:data,
+        //     dataType: "json",
+        //     error:function(){
+        //         alert("asdj")
+        //     },
+        //     success:function(response){
+        //         shipinfo=response["res"];
+        //         allert(response["res"])
+        //     }
+        // });
+        // promise(shipinfo) ;
     }
 </script>
 
