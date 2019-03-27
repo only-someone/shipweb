@@ -39,6 +39,7 @@ app.use('/users', usersRouter);
 
 
 app.post('/ship', (req,res)=>{
+    console.log("ship")
     SHIP_SERVER.find(res,req);
 });
 app.get('/ship.html', (req,res)=>{
