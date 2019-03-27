@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css">
+      body,
+      html,
+      #container {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+      }
+      #search-bar {
+        position: fixed;
+        left: 10px;
+        top: 10px;
+        z-index: 9999;
+        width: 250px;
+        height: 24px;
+      }
+      #search-bar input {
+        height: 24px;
+      }
+    </style>
+    <title>船舶</title>
+
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://webapi.amap.com/maps?v=1.4.13&key=a9b1c7de9e96206b1d3f36843adbfb2c&callback=init"></script>
+  </head>
+  <body>
+
+    <div id="search-bar">
+      <input placeholder="海洋石油255" type="text" />
+      <input value="搜索" type="button" />
+    </div>
+
+    <div id="container" tabindex="0"></div>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var map = new AMap.Map("container", {
+          resizeEnable: true,
+          center: [120.480983, 32.989628],
+          zoom: 5,
+          mapStyle: "amap://styles/whitesmoke"
+        });
+
+        $.ajax({
+          url: "/all",
+          type: "GET",
+          dataType: "json",
+          success: function(response) {
+            for (let doc in response["res"]) {
+              var marker = new AMap.Marker({
+                position: response["res"][doc]["GPS"], //位置
+                map: map
+              });
+
+              marker.setMap(map); //添加到地图
+              AMap.event.addListener(marker, "click", function() {
+                getshipinfo(response["res"][doc]["MMSI"]).then(data => {
+                  console.log(data);
+                  var ShipEnglishName = data.shipinfo["英文名"];
+                  var MMSI = data.shipinfo["MMSI"];
+                  var IMO = data.shipinfo["IMO"];
+                  var CallNum = data.shipinfo["呼号"];
+                  var Length = data.shipinfo["船长"];
+                  var Weight = data.shipinfo["船宽"];
+                  var EatWater = data.shipinfo["吃水"];
+                  var ShipChineseName = data.shipinfo["中文名"];
+                  var ToalLoad = data.shipinfo["总吨"];
+                  var PureLoad = data.shipinfo["载重吨"];
+                  var Load = data.shipinfo["净吨"];
+                  var CreateDate = data.shipinfo["造船日期"];
+                  var Firm = data.shipinfo["公司"];
+                  var ComeFrom = data.shipinfo["? 3"];
+                  content = [
+                    "<br>英文名:" +
+                      ShipEnglishName +
+                      "MMSI:" +
+                      MMSI +
+                      "</br><br>IMO:" +
+                      IMO +
+                      "呼号:" +
+                      Length +
+                      "</br><br>船长:" +
+                      Weight +
+                      "船宽:" +
+                      Weight +
+                      "</br><br>中文名:" +
+                      ShipChineseName +
+                      "吃水:" +
+                      EatWater +
+                      "</br><br>总吨:" +
+                      PureLoad +
+                      "载重吨:" +
+                      Load +
+                      "</br><br>净吨:" +
+                      ToalLoad +
+                      "造船日期:" +
+                      CreateDate +
+                      "</br><br>公司:" +
+                      Firm
+                  ];
+                  var infoWindow = new AMap.InfoWindow({
+                    content: content.join("<br/>")
+                  });
+                  infoWindow.open(map, response["res"][doc]["GPS"]);
+                });
+              });
+            }
+          }
+        });
+      });
+      getshipinfo = function(shipid) {
+        var data = { id: shipid };
+        return new Promise(function(resolve, reject) {
+          $.ajax({
+            url: "/ship",
+            type: "POST",
+            data: data,
+            dataType: "json",
+            error: function() {
+              alert("asdj");
+            },
+            success: function(response) {
+              shipinfo = response["res"];
+              resolve({ shipinfo: shipinfo });
+            }
+          });
+        });
+      };
+    </script>
+  </body>
+</html>
