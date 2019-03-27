@@ -42,9 +42,16 @@ app.post('/ship', (req,res)=>{
     console.log("ship")
     SHIP_SERVER.find(res,req);
 });
-app.get('/ship.html', (req,res)=>{
+app.get('/ships', (req,res)=>{
     //var shipinfo=SHIP_SERVER.findall(res,req);
     res.sendFile( __dirname  + "/views/ship.html" );
+});
+app.get('/shipregin', (req,res)=>{
+    //var shipinfo=SHIP_SERVER.findall(res,req);
+    res.sendFile( __dirname  + "/views/shipregin.html" );
+});
+app.get('/trace', (req,res)=>{
+    res.sendFile( __dirname  + "/views/track.html" );
 });
 app.post('/shipdetail', (req,res)=>{
     SHIP_SERVER.finddetail(res,req);
@@ -56,6 +63,7 @@ app.get('/all', (req,res)=>{
     console.log("all")
     SHIP_SERVER.findall(res,req);
 });
+
 
 
 // catch 404 and forward to error handler

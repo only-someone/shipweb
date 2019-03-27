@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <script type="text/javascript" src="js/jquery1-11-1.js"></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
@@ -31,30 +30,40 @@
                     zoom: 5,
                     mapStyle: 'amap://styles/whitesmoke',
                 });
-                for (var doc in response["res"]) {
-                    var marker = new AMap.Marker({
-                        position: response["res"][doc]["GPS"],//位置
-                        map: map,
-                    })
-                    //alert(response["res"][doc]["MMSI"])
-                    // var content=getshipinfo(response["res"][doc]["MMSI"])
-                    var content = [" sad " + response["res"][doc]["GPS"]]
-                    AMap.event.addListener(marker, 'click', function () {
-                        content=getshipinfo(response["res"][doc]["MMSI"])
-                        var infoWindow = new AMap.InfoWindow({
-                            content: content.join("<br/>"),
-                        });
-                        infoWindow.open(map, response["res"][doc]["GPS"]);
-                    });
-                    marker.setMap(map);//添加到地图
-                    //var tittle="chuanboming"
+                var style = [{
+                    url: 'https://a.amap.com/jsapi_demos/static/images/mass0.png',
+                    anchor: new AMap.Pixel(6, 6),
+                    size: new AMap.Size(11, 11)
+                }, {
+                    url: 'https://a.amap.com/jsapi_demos/static/images/mass1.png',
+                    anchor: new AMap.Pixel(4, 4),
+                    size: new AMap.Size(7, 7)
+                }, {
+                    url: 'https://a.amap.com/jsapi_demos/static/images/mass2.png',
+                    anchor: new AMap.Pixel(3, 3),
+                    size: new AMap.Size(5, 5)
                 }
+                ];
+                var mass = new AMap.MassMarks(citys, {
+                    opacity: 0.8,
+                    zIndex: 111,
+                    cursor: 'pointer',
+                    style: style
+                });
+                var data=[];
+
+                for (var doc in response["res"]) {
+                    data.push({lnglat:response["res"][doc]["GPS"]});//位置
+                }
+                alert(data);
+                massMarks.setData(data);
+                massMarks.setMap(map);
             }
         })
     })
-    var shipinfo;
     getshipinfo=function(shipid){
         var data={"id":shipid};
+        var shipinfo;
         $ajax({
             url:"/ship",
             type:"POST",
@@ -68,7 +77,7 @@
                 allert(response["res"])
             }
         });
-        promise(shipinfo) ;
+        return shipinfo;
     }
 </script>
 

@@ -45,8 +45,7 @@ let mogo_ship={
                 }
                 //console.log(doc)
                 resolve(doc);
-
-                res.json(doc);
+                res.json({"res":doc});
             })
         })
     },
