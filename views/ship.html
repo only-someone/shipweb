@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <script type="text/javascript" src="js/jquery1-11-1.js"></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
@@ -20,54 +19,70 @@
 <div id="container" tabindex="0"></div>
 <script type="text/javascript">
     $(document).ready(function() {
+        var map = new AMap.Map('container', {
+            resizeEnable: true,
+            center: [120.480983, 32.989628],
+            zoom: 5,
+            mapStyle: 'amap://styles/whitesmoke',
+        });
 
         $.ajax({
             url: '/all',
             type: 'GET',
             dataType: 'json',
             success: function (response) {
-                var map = new AMap.Map('container', {
-                    resizeEnable: true,
-                    center: [120.480983, 32.989628],
-                    zoom: 5,
-                    mapStyle: 'amap://styles/whitesmoke',
-                });
                 for (var doc in response["res"]) {
-                    var marker = new AMap.Marker({
-                        position: response["res"][doc]["GPS"],//位置
-                        map: map,
-                    })
-                    //alert(response["res"][doc]["MMSI"])
-                    // var content=getshipinfo(response["res"][doc]["MMSI"])
-                    // var content = [" sad " + response["res"][doc]["GPS"]]
-                    getshipinfo(response["res"][doc]["MMSI"]).then(function(shipinfo){
+                    getshipinfo(response["res"][doc]["MMSI"],response["res"][doc]["GPS"]).then(function(data){
+                        console.log(data)
+                        var marker = new AMap.Marker({
+                            position: data.position,//位置
+                            map: map,
+                        })
                         AMap.event.addListener(marker, 'click', function () {
-                            // content=getshipinfo(response["res"][doc]["MMSI"])
-                            content = shipinfo
+                            var ShipEnglishName=data.shipinfo["英文名"];
+                            var MMSI=data.shipinfo["MMSI"];
+                            var IMO=data.shipinfo["IMO"];
+                            var   CallNum=data.shipinfo["呼号"];
+                            var   Length=data.shipinfo["船长"];
+                            var   Weight=data.shipinfo["船宽"];
+                            var   EatWater=data.shipinfo["吃水"];
+                            var   ShipChineseName=data.shipinfo["中文名"];
+                            var   ToalLoad=data.shipinfo["总吨"];
+                            var   PureLoad=data.shipinfo["载重吨"];
+                            var Load=data.shipinfo["净吨"];
+                            var  CreateDate=data.shipinfo["造船日期"];
+                            var  Firm=data.shipinfo["公司"];
+                            var ComeFrom=data.shipinfo["? 3"];
+                            content = [
+                                "<br>英文名:"+ShipEnglishName
+                                +"MMSI:"+MMSI
+                                +"</br><br>IMO:"+IMO
+                                +"呼号:"+Length
+                                +"</br><br>船长:"+Weight
+                                +"船宽:"+Weight
+                                +"</br><br>中文名:"+ShipChineseName
+                                +"吃水:"+EatWater
+                                +"</br><br>总吨:"+PureLoad
+                                +"载重吨:"+Load
+                                +"</br><br>净吨:"+ToalLoad
+                                +"造船日期:"+CreateDate
+                                +"</br><br>公司:"+Firm
+                            ];
                             var infoWindow = new AMap.InfoWindow({
                                 content: content.join("<br/>"),
                             });
-                            infoWindow.open(map, response["res"][doc]["GPS"]);
+                            infoWindow.open(map, data.position);
                         });
                         marker.setMap(map);//添加到地图
                     })
-                    // AMap.event.addListener(marker, 'click', function () {
-                    //     // content=getshipinfo(response["res"][doc]["MMSI"])
-                    //     var infoWindow = new AMap.InfoWindow({
-                    //         content: content.join("<br/>"),
-                    //     });
-                    //     infoWindow.open(map, response["res"][doc]["GPS"]);
-                    // });
-                    // marker.setMap(map);//添加到地图
-                    //var tittle="chuanboming"
                 }
             }
         })
     })
-    getshipinfo=function(shipid){
+    getshipinfo=function(shipid,position){
         var data={"id":shipid};
         return new Promise(function(resolve, reject) {
-             $ajax({
+            $.ajax({
                 url:"/ship",
                 type:"POST",
                 data:data,
@@ -77,26 +92,10 @@
                 },
                 success:function(response){
                     shipinfo=response["res"];
-                    allert(response["res"])
-                    resolve(shipinfo);
+                    resolve({shipinfo:shipinfo,position:position});
                 }
             });
         })
-
-        // $ajax({
-        //     url:"/ship",
-        //     type:"POST",
-        //     data:data,
-        //     dataType: "json",
-        //     error:function(){
-        //         alert("asdj")
-        //     },
-        //     success:function(response){
-        //         shipinfo=response["res"];
-        //         allert(response["res"])
-        //     }
-        // });
-        // promise(shipinfo) ;
     }
 </script>
 

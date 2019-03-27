@@ -79,7 +79,7 @@ function closeInfoWindow() {
 
 function getshipinfo(shipid){
     var data={"id":shipid};
-    $ajax({
+    $.ajax({
         url:"/ship",
         type:"POST",
         data:data,
