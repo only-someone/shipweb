@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://webapi.amap.com/maps?v=1.4.13&key=a9b1c7de9e96206b1d3f36843adbfb2c&callback=init"></script>
     <style type="text/css">
         body,html,#container{
             width: 100%;
@@ -13,9 +15,7 @@
     </style>
     <title>船舶</title>
 </head>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <body>
-<script src="https://webapi.amap.com/maps?v=1.4.13&key=a9b1c7de9e96206b1d3f36843adbfb2c&callback=init"></script>
 <div id="container" tabindex="0"></div>
 <script type="text/javascript">
     (function ($) {
@@ -36,25 +36,67 @@
             success: function (response) {
                 var path=[]
                 //alert(JSON.stringify(response))
-                var map = new AMap.Map('container', {
-                    resizeEnable: true,
-                    center: [120.480983, 32.989628],
-                    zoom: 5,
-                    mapStyle: 'amap://styles/whitesmoke',
-                });
-
                 for (var doc in response["res"]) {
                     path.push(response["res"][doc]["GPS"])
-
                 }
-                alert(path);
+                path.reverse()
+                var map = new AMap.Map('container', {
+                    resizeEnable: true,
+                    center: path[0],
+                    zoom: 300,
+                    mapStyle: 'amap://styles/whitesmoke',
+                });
+                //alert(path);
+                var startmarker = new AMap.Marker({
+                    map: map,
+                    position: path[0],
+                    icon: "https://webapi.amap.com/images/car.png",
+                    //offset: new AMap.Pixel(-26, -13),
+                    autoRotation: true,
+                    angle:-90,
+                });
                 var polyline = new AMap.Polyline({
                     path: path,
+                    showDir:true,
                     borderWeight: 3, // 线条宽度，默认为 1
                     strokeColor: 'blue', // 线条颜色
                     lineJoin: 'round' // 折线拐点连接处样式
+                    // strokeStyle: "solid"  //线样式
                 });
                 map.add(polyline);
+                var passedPolyline = new AMap.Polyline({
+                    map: map,
+                    // path: lineArr,
+                    strokeColor: "red",  //线颜色
+                    // strokeOpacity: 1,     //线透明度
+                    strokeWeight: 6,      //线宽
+                                            //播放速度
+                    // strokeStyle: "solid"  //线样式
+                });
+
+
+                startmarker.on('moving', function (e) {
+                    passedPolyline.setPath(e.passedPath);
+                });
+                map.setFitView();
+                startAnimation();
+
+
+                function startAnimation () {
+                    startmarker.moveAlong(path, 20000);
+                }
+
+                function pauseAnimation () {
+                    startmarker.pauseMove();
+                }
+
+                function resumeAnimation () {
+                    startmarker.resumeMove();
+                }
+
+                function stopAnimation () {
+                    startmarker.stopMove();
+                }
             }
         })
     })
@@ -63,6 +105,6 @@
 </body>
 </html>
 
-//轨迹纠偏     轨迹展示    轨迹放大   轨迹时长
+//轨迹纠偏 （放弃）  ?path问题  轨迹展示ok
 //天气
-//id
+

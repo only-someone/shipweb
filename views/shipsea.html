@@ -47,7 +47,8 @@
               resizeEnable: true,
               center: [120.480983, 32.989628],
               zoom: 5,
-              mapStyle: "amap://styles/whitesmoke"
+              mapStyle: "amap://styles/whitesmoke",
+              animateEnable:true,
             });
             var style = [{
               url: 'https://a.amap.com/jsapi_demos/static/images/mass0.png',
@@ -77,7 +78,6 @@
             });
             massMarks.setData(ships);
             var marker = new AMap.Marker({content:' ', map: map});
-
             mass.setMap(map)
 
           }
