@@ -15,6 +15,7 @@
     "mongodb": "^2.2.33",
     "mongoose": "~5.4.19",
     "morgan": "~1.9.0",
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "setprototypeof": "^1.1.1"
   }
 }

@@ -7,21 +7,34 @@
       name="viewport"
       content="initial-scale=1.0, user-scalable=no, width=device-width"
     />
+    <title>船舶</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
     <style type="text/css">
-      body,
-      html,
-      #container {
-        width: 100%;
+      html, body, #container {
         height: 100%;
-        margin: 0px;
+        width: 100%;
+      }
+
+      .input-card .btn {
+        position: fixed;
+        left: 10px;
+        top: 10px;
+        z-index: 9999;
+        width: 250px;
+        height: 24px;
+      }
+
+      .input-card .btn:last-child {
+        margin-right: 0;
       }
     </style>
-    <title>船舶</title>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
   </head>
-  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <body>
-    <script src="https://webapi.amap.com/maps?v=1.4.13&key=a9b1c7de9e96206b1d3f36843adbfb2c&callback=init"></script>
+
     <div id="container" tabindex="0"></div>
+    <script src="https://webapi.amap.com/maps?v=1.4.13&key=a9b1c7de9e96206b1d3f36843adbfb2c&callback=init"></script>
     <script type="text/javascript">
       $(document).ready(function() {
         $.ajax({
@@ -29,76 +42,44 @@
           type: "GET",
           dataType: "json",
           success: function(response) {
-            var cluster,
-              markers = [];
+            var ships = [];
             var map = new AMap.Map("container", {
               resizeEnable: true,
               center: [120.480983, 32.989628],
               zoom: 5,
               mapStyle: "amap://styles/whitesmoke"
             });
-            var style = [
-              {
-                url: "https://a.amap.com/jsapi_demos/static/images/mass0.png",
-                anchor: new AMap.Pixel(6, 6),
-                size: new AMap.Size(11, 11)
-              },
-              {
-                url: "https://a.amap.com/jsapi_demos/static/images/mass1.png",
-                anchor: new AMap.Pixel(4, 4),
-                size: new AMap.Size(7, 7)
-              },
-              {
-                url: "https://a.amap.com/jsapi_demos/static/images/mass2.png",
-                anchor: new AMap.Pixel(3, 3),
-                size: new AMap.Size(5, 5)
-              }
+            var style = [{
+              url: 'https://a.amap.com/jsapi_demos/static/images/mass0.png',
+              anchor: new AMap.Pixel(6, 6),
+              size: new AMap.Size(11, 11)
+            }, {
+              url: 'https://a.amap.com/jsapi_demos/static/images/mass1.png',
+              anchor: new AMap.Pixel(4, 4),
+              size: new AMap.Size(7, 7)
+            }, {
+              url: 'https://a.amap.com/jsapi_demos/static/images/mass2.png',
+              anchor: new AMap.Pixel(3, 3),
+              size: new AMap.Size(5, 5)
+            }
             ];
             for (var doc in response["res"]) {
-              var marker = new AMap.Marker({
-                position: response["res"][doc]["GPS"], //位置
-                content:
-                  '<div style="background-color: hsla(180, 100%, 50%, 0.7); height: 24px; width: 24px; border: 1px solid hsl(180, 100%, 40%); border-radius: 12px; box-shadow: hsl(180, 100%, 50%) 0px 0px 1px;"></div>',
-                offset: new AMap.Pixel(-15, -15)
-              });
-              markers.push(marker);
+              let GPS=response["res"][doc]["GPS"];
+              //let 中文名=response["res"][doc]["中文名"]
+              let ship={"GPS":GPS,"style":2}
+              ships.push(ship)
             }
-            var count = markers.length;
-            var _renderClusterMarker = function(context) {
-              var factor = Math.pow(context.count / count, 1 / 18);
-              var div = document.createElement("div");
-              var Hue = 180 - factor * 180;
-              var bgColor = "hsla(" + Hue + ",100%,50%,0.7)";
-              var fontColor = "hsla(" + Hue + ",100%,20%,1)";
-              var borderColor = "hsla(" + Hue + ",100%,40%,1)";
-              var shadowColor = "hsla(" + Hue + ",100%,50%,1)";
-              div.style.backgroundColor = bgColor;
-              var size = Math.round(
-                30 + Math.pow(context.count / count, 1 / 5) * 20
-              );
-              div.style.width = div.style.height = size + "px";
-              div.style.border = "solid 1px " + borderColor;
-              div.style.borderRadius = size / 2 + "px";
-              div.style.boxShadow = "0 0 1px " + shadowColor;
-              div.innerHTML = context.count;
-              div.style.lineHeight = size + "px";
-              div.style.color = fontColor;
-              div.style.fontSize = "14px";
-              div.style.textAlign = "center";
-              context.marker.setOffset(new AMap.Pixel(-size / 2, -size / 2));
-              context.marker.setContent(div);
-            };
 
-            map.plugin(["AMap.MarkerClusterer"], function() {
-              cluster = new AMap.MarkerClusterer(
-                map, // 地图实例
-                markers, // 海量点组成的数组
-                {
-                  gridSize: 80,
-                  renderClusterMarker: _renderClusterMarker
-                }
-              );
+            var massMarks = new AMap.MassMarks({
+              zIndex: 5,  // 海量点图层叠加的顺序
+              zooms: [3, 19],  // 在指定地图缩放级别范围内展示海量点图层
+              style: style  // 设置样式对象
             });
+            massMarks.setData(ships);
+            var marker = new AMap.Marker({content:' ', map: map});
+
+            mass.setMap(map)
+
           }
         });
       });

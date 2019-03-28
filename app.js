@@ -46,6 +46,10 @@ app.get('/ships', (req,res)=>{
     //var shipinfo=SHIP_SERVER.findall(res,req);
     res.sendFile( __dirname  + "/views/ship(2).html" );
 });
+app.get('/shipsea', (req,res)=>{
+    //var shipinfo=SHIP_SERVER.findall(res,req);
+    res.sendFile( __dirname  + "/views/shipsea.html" );
+});
 app.get('/shipregin', (req,res)=>{
     //var shipinfo=SHIP_SERVER.findall(res,req);
     res.sendFile( __dirname  + "/views/shipregin.html" );
