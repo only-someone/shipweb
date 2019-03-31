@@ -39,7 +39,7 @@
                 for (var doc in response["res"]) {
                     path.push(response["res"][doc]["GPS"])
                 }
-                path.reverse()
+                //path.reverse()
                 var map = new AMap.Map('container', {
                     resizeEnable: true,
                     center: path[0],
@@ -47,11 +47,16 @@
                     mapStyle: 'amap://styles/whitesmoke',
                 });
                 //alert(path);
+                var micon = new AMap.Icon({
+                    size: new AMap.Size(40, 50),    // 图标尺寸
+                    image:  "/ship.png",  // Icon的图像
+                    imageSize: new AMap.Size(40, 50)   // 根据所设置的大小拉伸或压缩图片
+                });
+
                 var startmarker = new AMap.Marker({
                     map: map,
                     position: path[0],
-                    icon: "https://a.amap.com/jsapi_demos/static/images/mass2.png",
-                    //offset: new AMap.Pixel(-26, -13),
+                    icon:micon,
                     autoRotation: true,
                     angle:-90,
                 });
@@ -105,7 +110,4 @@
 </body>
 </html>
 
-//轨迹纠偏 （放弃）  ?path问题  轨迹展示ok
-//天气
-//三种样式切换   轨迹搜索   船舶搜索
-//热力图
+

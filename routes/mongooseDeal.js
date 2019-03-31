@@ -39,7 +39,7 @@ let mogo_ship={
         let id = req.body.id;
         console.log(id);
         let p = new Promise((resolve, reject) => {
-            shipdynahis.find({"MMSI": id},{"_id":0,"GPS":1,"船首向":1,"船迹向":1,"航速":1,"？2nav_status":1},{limit:56}, (err, doc) => {//一个星期24*7/3
+            shipdynahis.find({"MMSI": id},{"_id":0,"GPS":1,"船首向":1,"船迹向":1,"航速":1,"？2nav_status":1},{limit:112}, (err, doc) => {//2个星期2*24*7/3
                 if (err) {
                     reject(err)
                 }
