@@ -50,7 +50,7 @@
                 var startmarker = new AMap.Marker({
                     map: map,
                     position: path[0],
-                    icon: "https://webapi.amap.com/images/car.png",
+                    icon: "https://a.amap.com/jsapi_demos/static/images/mass1.png",
                     //offset: new AMap.Pixel(-26, -13),
                     autoRotation: true,
                     angle:-90,
@@ -83,7 +83,7 @@
 
 
                 function startAnimation () {
-                    startmarker.moveAlong(path, 1000);
+                    startmarker.moveAlong(path, 20000);
                 }
 
                 function pauseAnimation () {

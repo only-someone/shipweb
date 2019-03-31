@@ -29,12 +29,12 @@
       }
     </style>
     <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-
+    <script src="https://webapi.amap.com/maps?v=1.4.13&key=a9b1c7de9e96206b1d3f36843adbfb2c&callback=init"></script>
   </head>
   <body>
 
     <div id="container" tabindex="0"></div>
-    <script src="https://webapi.amap.com/maps?v=1.4.13&key=a9b1c7de9e96206b1d3f36843adbfb2c&callback=init"></script>
+
     <script type="text/javascript">
       $(document).ready(function() {
         $.ajax({
@@ -43,14 +43,19 @@
           dataType: "json",
           success: function(response) {
             var ships = [];
-            var map = new AMap.Map("container", {
+            var map= new AMap.Map("container", {
               resizeEnable: true,
               center: [120.480983, 32.989628],
               zoom: 5,
               mapStyle: "amap://styles/whitesmoke",
-              animateEnable:true,
+              animateEnable: true,
             });
-            var style = [{
+
+            var styleObject = [{
+              url: '//vdata.amap.com/icons/b18/1/2.png',  // 图标地址
+              size: new AMap.Size(11, 11),      // 图标大小
+              anchor: new AMap.Pixel(5, 5) // 图标显示位置偏移量，基准点为图标左上角
+            },{
               url: 'https://a.amap.com/jsapi_demos/static/images/mass0.png',
               anchor: new AMap.Pixel(6, 6),
               size: new AMap.Size(11, 11)
@@ -62,24 +67,21 @@
               url: 'https://a.amap.com/jsapi_demos/static/images/mass2.png',
               anchor: new AMap.Pixel(3, 3),
               size: new AMap.Size(5, 5)
-            }
-            ];
+            }];
             for (var doc in response["res"]) {
-              let GPS=response["res"][doc]["GPS"];
+              let GPS = response["res"][doc]["GPS"];
               //let 中文名=response["res"][doc]["中文名"]
-              let ship={"GPS":GPS,"style":2}
+              let ship = {"lnglat": GPS, "style":Math.floor(Math.random()*4) }
               ships.push(ship)
             }
-
-            var massMarks = new AMap.MassMarks({
-              zIndex: 5,  // 海量点图层叠加的顺序
-              zooms: [3, 19],  // 在指定地图缩放级别范围内展示海量点图层
-              style: style  // 设置样式对象
+            alert(JSON.stringify(ships))
+            var mass = new AMap.MassMarks(ships, {
+              opacity: 0.8,
+              zIndex: 111,
+              cursor: 'pointer',
+              style: styleObject
             });
-            massMarks.setData(ships);
-            var marker = new AMap.Marker({content:' ', map: map});
             mass.setMap(map)
-
           }
         });
       });

@@ -19,12 +19,15 @@
 <div id="container" tabindex="0"></div>
 <script type="text/javascript">
     $(document).ready(function() {
-        var map = new AMap.Map('container', {
-            resizeEnable: true,
-            center: [120.480983, 32.989628],
-            zoom: 5,
-            mapStyle: 'amap://styles/whitesmoke',
-        });
+        var map
+        window.init = function() {
+             map = new AMap.Map('container', {
+                resizeEnable: true,
+                center: [120.480983, 32.989628],
+                zoom: 5,
+                mapStyle: 'amap://styles/whitesmoke',
+            });
+        }
 
         $.ajax({
             url: '/all',
