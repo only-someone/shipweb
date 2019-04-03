@@ -1,15 +1,31 @@
-var  Papa=require('papaparse')
-var  mongodb = require('mongodb');
-var  server  = new mongodb.Server('localhost', 27017, {auto_reconnect:true});
-//连接的数据库为stock
-var  db = new mongodb.Db('ship', server, {safe:true});
 
-
-var file_upload=function () {
-    var data=Papa.parse(csv);
+function file_upload () {
+    var file = document.getElementById("file-upload").files[0];
+    //console.log(file.parse());
+$("#file-upload").parse({
+        config: {
+            // base config to use for each file
+        },
+        before: function(file, inputElem)
+        {
+            // executed before parsing each file begins;
+            // what you return here controls the flow
+        },
+        error: function(err, file, inputElem, reason)
+        {
+            // executed if an error occurs while loading the file,
+            // or if before callback aborted for some reason
+        },
+        complete: function(results)
+        {
+            console.log(results.data)
+            // executed after all files are complete
+        }
+    });
+   /* var data=parse(csv);
     Papa.parse(file,{
         complete:function (results) {
-            devices=resuls.data();//1002
+            var devices=resuls.data();//1002
             console.log(devices);
             db.open(function(err, db){
                 if(!err){
@@ -18,7 +34,8 @@ var file_upload=function () {
                         if(err){
                             console.log(err);
                         }else{
-                            for(var i=0;i<devices.length();i++){
+                            var i=0;
+                            for(i;i<devices.length();i++){
                                 device={
                                     "shipinfo":devices[i][0],
                                     "发电机功率":devices[i][1],
@@ -35,7 +52,7 @@ var file_upload=function () {
                                     '海水温度':devices[i][12],
                                     '机舱温度':devices[i][13],
                                     '更新时间':devices[i][14],
-                                }
+                                };
                                 collection.insert(json,{safe:true},function(err,result){
                                     console.log(result);
                                 });
@@ -47,6 +64,6 @@ var file_upload=function () {
                     console.log(err);
                 }
             });
-        }
+        }});*/
 }
 

@@ -1,6 +1,8 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+const device=require("./routes/mongoose/models/device");
+const devicehis=require("./routes/mongoose/models/devicehis");
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var ejs=require('ejs');
@@ -8,7 +10,8 @@ var MongoClient=require('mongodb').MongoClient;
 var url='mongodb://localhost:27017/ship';
 const SHIP_SERVER = require('./routes/shipserver')
 var bodyParser = require('body-parser');
-
+var fs = require('fs');
+var multer  = require('multer')
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/ship', {useNewUrlParser: true});
 var db = mongoose.connection;
@@ -20,6 +23,8 @@ db.once('open', function() {
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(multer({dest:"./csvfile"}).array("file"));
+var upload = multer({ dest: './csvfile' });
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 //var publicRouter = require('./public');
@@ -80,26 +85,22 @@ app.get('/all', (req,res)=>{
 });
 app.get('/upload', (req,res)=>{
     console.log("upload")
-    res.sendFile( __dirname  + "/views/upload.html" );
+    res.sendFile( __dirname  + "/views/upload2.html" );
 });
-app.post('/file_upload', (req,res)=>{
-    console.log(req.files.name);  // 上传的文件信息
-
-    var des_file = __dirname + "/" + req.files.name;
-    fs.readFile( req.files.path, function (err, data) {
-        fs.writeFile(des_file, data, function (err) {
-            if( err ){
-                console.log( err );
+app.post('/file_upload',upload.array('file'),function (req, res) {
+    console.log(req.files);
+    for (var i = 0; i <req.files.length; i++) {
+        console.log(req.files[i].originalname);
+        var newName = req.files[i].path + path.parse(req.files[i].originalname).ext;
+        fs.rename(req.files[i].path,newName,function(err){
+            if (err) {
+                console.log("rename failure.");
             }else{
-                response = {
-                    message:'File uploaded successfully',
-                    filename:req.files.originalname
-                };
+                console.log("rename success.");
             }
-            console.log( response );
-            res.end( JSON.stringify( response ) );
         });
-    });
+    }
+    res.send("成功");
 });
 
 // catch 404 and forward to error handler
