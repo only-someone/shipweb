@@ -19,7 +19,5 @@
     "prettier": "^1.16.4",
     "setprototypeof": "^1.1.1"
   },
-  "devDependencies": {
-    "line-reader": "^0.4.0"
-  }
+  "devDependencies": {}
 }
