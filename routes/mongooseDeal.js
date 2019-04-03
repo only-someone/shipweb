@@ -1,6 +1,8 @@
 const ship=require("./mongoose/models/ship");
 const shipdyna=require("./mongoose/models/shipdyna");
 const shipdynahis=require("./mongoose/models/shipdynahis");
+const device=require("./mongoose/models/device");
+const devicehis=require("./mongoose/models/devicehis");
 let mogo_ship={
     findship:(req,res)=>{
         let{shipname,id}=req.body;
@@ -29,6 +31,28 @@ let mogo_ship={
         console.log(id);
         let p =new Promise((resolve,reject)=>{
             shipdyna.findOne({"MMSI":id},(err,doc)=>{
+                if(err){reject(err)}
+                resolve(doc);
+            })
+        })
+        return p;
+    },
+    finddevice:(req,res)=>{
+        let id=req.body.id;
+        console.log(id);
+        let p =new Promise((resolve,reject)=>{
+            device.findOne({"shipinfo":id},(err,doc)=>{
+                if(err){reject(err)}
+                resolve(doc);
+            })
+        })
+        return p;
+    },
+    finddevicehis:(req,res)=>{
+        let id=req.body.id;
+        console.log(id);
+        let p =new Promise((resolve,reject)=>{
+            devicehis.find({"shipinfo":id},{},{limit:112},(err,doc)=>{
                 if(err){reject(err)}
                 resolve(doc);
             })
@@ -64,6 +88,28 @@ let mogo_ship={
                 if(err){reject(err)}
                 resolve(doc);
             })
+        })
+        return p;
+    },
+    findship:(req,res)=>{
+        let{shipname,id}=req.body;
+        let p =new Promise((resolve,reject)=>{
+            if(id){
+                ship.findOne({"MMSI":id},(err,doc)=>{
+                    console.log(shipname);
+                    console.log(id);
+                    if(err){reject(err)}
+                    resolve(doc);
+                })
+            }
+            else if(shipname){
+                ship.find({"中文名":{$regex:".*"+shipname+".*"}},(err,doc)=>{
+                    console.log(shipname);
+                    console.log(id);
+                    if(err){reject(err)}
+                    resolve(doc)
+                })
+            }
         })
         return p;
     },

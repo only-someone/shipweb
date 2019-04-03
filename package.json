@@ -15,7 +15,11 @@
     "mongodb": "^2.2.33",
     "mongoose": "~5.4.19",
     "morgan": "~1.9.0",
+    "papaparse": "^4.6.3",
     "prettier": "^1.16.4",
     "setprototypeof": "^1.1.1"
+  },
+  "devDependencies": {
+    "line-reader": "^0.4.0"
   }
 }

@@ -66,12 +66,41 @@ app.post('/shipdetail', (req,res)=>{
 app.post('/shiphis', (req,res)=>{
     SHIP_SERVER.findhis(res,req);
 });
+
+app.post('/device', (req,res)=>{
+    SHIP_SERVER.finddevice(res,req);
+});
+app.post('/devicehis', (req,res)=>{
+    console.log("devicehis")
+    SHIP_SERVER.finddevicehis(res,req);
+});
 app.get('/all', (req,res)=>{
     console.log("all")
     SHIP_SERVER.findall(res,req);
 });
+app.get('/upload', (req,res)=>{
+    console.log("upload")
+    res.sendFile( __dirname  + "/views/upload.html" );
+});
+app.post('/file_upload', (req,res)=>{
+    console.log(req.files.name);  // 上传的文件信息
 
-
+    var des_file = __dirname + "/" + req.files.name;
+    fs.readFile( req.files.path, function (err, data) {
+        fs.writeFile(des_file, data, function (err) {
+            if( err ){
+                console.log( err );
+            }else{
+                response = {
+                    message:'File uploaded successfully',
+                    filename:req.files.originalname
+                };
+            }
+            console.log( response );
+            res.end( JSON.stringify( response ) );
+        });
+    });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

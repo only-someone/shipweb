@@ -18,5 +18,16 @@ const SHIP_SERVER={
             res.json({res:doc})
         })
     },
+    finddevice:(res,req)=>{
+        mongo_ship.finddevice(req,res).then(doc=>{
+        res.json({res:doc})
+        })
+    },
+    finddevicehis:(res,req)=>{
+        mongo_ship.finddevicehis(req,res).then(doc=>{
+            console.log("devicehis2")
+            res.json({res:doc})
+        })
+    },
 }
 module.exports =  SHIP_SERVER
