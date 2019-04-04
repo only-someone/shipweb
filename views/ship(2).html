@@ -18,6 +18,14 @@
         width: 400px;
         height: 50px;
       }
+      #chose-model {
+        position: fixed;
+        left: 20px;
+        top: 200px;
+        z-index: 9999;
+        width: 400px;
+        height: 50px;
+      }
       #search-bar input {
         height: 50px;
       }
@@ -33,6 +41,11 @@
       <input id="text" placeholder="RUI NING 8或MMSI" type="text" />
       <input value="英文名搜索" type="button" onclick="namehref()"/>
       <input value="MMSI搜索" type="button" onclick="idhref()"/>
+    </div>
+
+    <div id="chose-model">
+      <input value="海量点模式" type="button" onclick="window.location.href ='/shipsea'"/>
+      <input value="聚集模式" type="button" onclick="window.location.href ='/shipregin'"/>
     </div>
 
     <div id="container" tabindex="0"></div>
