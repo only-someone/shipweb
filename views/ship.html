@@ -27,7 +27,7 @@
                 zoom: 5,
                 mapStyle: 'amap://styles/whitesmoke',
             });
-        }
+        };
 
         $.ajax({
             url: '/all',
@@ -42,6 +42,8 @@
                             map: map,
                         })
                         AMap.event.addListener(marker, 'click', function () {
+                            content=JSON.stringify(data.shipinfo);
+                            /*
                             var ShipEnglishName=data.shipinfo["英文名"];
                             var MMSI=data.shipinfo["MMSI"];
                             var IMO=data.shipinfo["IMO"];
@@ -71,8 +73,10 @@
                                 +"造船日期:"+CreateDate
                                 +"</br><br>公司:"+Firm
                             ];
+                            */
+
                             var infoWindow = new AMap.InfoWindow({
-                                content: content.join("<br/>"),
+                                content: content.replace(/,/g,"<br/>").replace(/{/g,'').replace(/}/g,""),
                             });
                             infoWindow.open(map, data.position);
                         });
@@ -81,7 +85,7 @@
                 }
             }
         })
-    })
+    });
     getshipinfo=function(shipid,position){
         var data={"id":shipid};
         return new Promise(function(resolve, reject) {

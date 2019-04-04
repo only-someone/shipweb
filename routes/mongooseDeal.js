@@ -16,7 +16,7 @@ let mogo_ship={
                 })
             }
             else if(shipname){
-                ship.find({"中文名":{$regex:".*"+shipname+".*"}},(err,doc)=>{
+                ship.find({"英文名":{$regex:".*"+shipname+".*"}},(err,doc)=>{
                     console.log(shipname);
                     console.log(id);
                     if(err){reject(err)}
@@ -59,19 +59,61 @@ let mogo_ship={
         })
         return p;
     },
+
+    findidbyname:(req,res)=>{
+    let p =new Promise((resolve,reject)=>{
+        ship.find({"英文名":req.body.shipname},{"MMSI":1},(err,doc)=>{
+            if(err){reject(err)}
+            resolve(doc);
+        })
+    })
+    return p;
+},
+
     findshiphis:(req,res)=> {
         let id = req.body.id;
-        console.log(id);
-        let p = new Promise((resolve, reject) => {
-            shipdynahis.find({"MMSI": id},{"_id":0,"GPS":1,"船首向":1,"船迹向":1,"航速":1,"？2nav_status":1},{limit:112}, (err, doc) => {//2个星期2*24*7/3
-                if (err) {
-                    reject(err)
-                }
-                //console.log(doc)
-                resolve(doc);
-                res.json({"res":doc});
+        let name = req.body.shipname;
+        //console.log(id);
+        console.log(name)
+        if(id) {
+            let p = new Promise((resolve, reject) => {
+                shipdynahis.find({"MMSI": id}, {
+                    "_id": 0,
+                    "GPS": 1,
+                    "船首向": 1,
+                    "船迹向": 1,
+                    "航速": 1,
+                    "？2nav_status": 1
+                }, {limit: 112}, (err, doc) => {//2个星期2*24*7/3
+                    if (err) {
+                        reject(err)
+                    }
+                    //console.log(doc)
+                    resolve(doc);
+                    res.json({"res": doc});
+                })
             })
-        })
+        }
+        else if (name) {
+            let p = new Promise((resolve, reject) => {
+
+                shipdynahis.find({"英文名": name}, {
+                    "_id": 0,
+                    "GPS": 1,
+                    "船首向": 1,
+                    "船迹向": 1,
+                    "航速": 1,
+                    "？2nav_status": 1
+                }, {limit: 112}, (err, doc) => {//2个星期2*24*7/3
+                    if (err) {
+                        reject(err)
+                    }
+                    //console.log(doc)
+                    resolve(doc);
+                    res.json({"res": doc});
+                })
+            })
+        }
     },
     findallhip:(req,res)=>{
         let p =new Promise((resolve,reject)=>{

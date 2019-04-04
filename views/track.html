@@ -25,9 +25,13 @@
             if (r != null) return unescape(r[2]); return null;
         }
     })(jQuery);
+
     $(document).ready(function(){
         var id=$.getUrlParam('id')
-        var data={"id":id}
+        console.log(id)
+        var name=$.getUrlParam('name')
+        console.log(name)
+        var data={"id":id,"shipname":name}
         $.ajax({
             url: '/shiphis',
             type: 'post',
@@ -60,6 +64,17 @@
                     autoRotation: true,
                     angle:-90,
                 });
+
+                AMap.event.addListener(startmarker, "click", function () {
+                    getdevice(id).then(data => {
+                        content=JSON.stringify(data.device);
+                        var infoWindow = new AMap.InfoWindow({
+                            content: content.replace(/,/g,'<br/>').replace(/{/g,'').replace(/}/g,""),
+                        });
+                        infoWindow.open(map,path[path.length-1]);
+                    });
+                });
+
                 var polyline = new AMap.Polyline({
                     path: path,
                     showDir:true,
@@ -105,6 +120,25 @@
             }
         })
     })
+    getdevice = function(shipid) {
+        var id=$.getUrlParam('id')
+        var data = { id: id };
+        return new Promise(function(resolve, reject) {
+            $.ajax({
+                url: "/device",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                error: function() {
+                    alert("未找到该船舶");
+                },
+                success: function(response) {
+                    device = response["res"];
+                    resolve({ device: device });
+                }
+            });
+        });
+    };
 </script>
 
 </body>

@@ -25,7 +25,11 @@ const SHIP_SERVER={
     },
     finddevicehis:(res,req)=>{
         mongo_ship.finddevicehis(req,res).then(doc=>{
-            console.log("devicehis2")
+            res.json({res:doc})
+        })
+    },
+    findid:(res,req)=>{
+        mongo_ship.findidbyname(req,res).then(doc=>{
             res.json({res:doc})
         })
     },

@@ -1,8 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-const device=require("./routes/mongoose/models/device");
-const devicehis=require("./routes/mongoose/models/devicehis");
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var ejs=require('ejs');
@@ -78,6 +76,10 @@ app.post('/device', (req,res)=>{
 app.post('/devicehis', (req,res)=>{
     console.log("devicehis")
     SHIP_SERVER.finddevicehis(res,req);
+});
+app.post('/id', (req,res)=>{
+    console.log("devicehis")
+    SHIP_SERVER.findid(res,req);
 });
 app.get('/all', (req,res)=>{
     console.log("all")
