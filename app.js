@@ -21,7 +21,7 @@ db.once('open', function() {
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
-app.use(multer({dest:"./csvfile"}).array("file"));
+app.use(multer({dest:"./csvfile"}).any());
 var upload = multer({ dest: './csvfile' });
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -89,20 +89,9 @@ app.get('/upload', (req,res)=>{
     console.log("upload")
     res.sendFile( __dirname  + "/views/upload2.html" );
 });
-app.post('/file_upload',upload.array('file'),function (req, res) {
+app.post('/file_upload',upload.array('file',9),function (req, res) {
     console.log(req.files);
-    for (var i = 0; i <req.files.length; i++) {
-        console.log(req.files[i].originalname);
-        var newName = req.files[i].path + path.parse(req.files[i].originalname).ext;
-        fs.rename(req.files[i].path,newName,function(err){
-            if (err) {
-                console.log("rename failure.");
-            }else{
-                console.log("rename success.");
-            }
-        });
-    }
-    res.send("成功");
+    //res.send("成功");
 });
 
 // catch 404 and forward to error handler
