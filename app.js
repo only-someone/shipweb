@@ -91,7 +91,7 @@ app.get('/upload', (req,res)=>{
 });
 app.post('/file_upload',upload.array('file',9),function (req, res) {
     console.log(req.files);
-    //res.send("成功");
+    res.send("成功");
 });
 
 // catch 404 and forward to error handler
