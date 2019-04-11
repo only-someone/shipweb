@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>船舶设备数据</title>
+    <style type="text/css">
+        html, body, #container {
+            height: 100%;
+            width: 100%;
+        }
+
+        .input-card .btn {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            z-index: 9999;
+            width: 250px;
+            height: 24px;
+        }
+
+        .input-card .btn:last-child {
+            margin-right: 0;
+        }
+    </style>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="cold_water" style="width:1500px;height:800px;top:10px;"></div>
+<div id="diesel_oil" style="width:1500px;height:800px;top:400px;"></div>
+<div id="Supercharger" style="width:1500px;height:500px;top:800px;"></div>
+</body>
+<script type="text/javascript">
+    (function ($) {
+        $.getUrlParam = function (id) {
+            var reg = new RegExp("(^|&)" + id + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        }
+    })(jQuery);
+    $(document).ready(function() {
+        var cold_Chart = echarts.init(document.getElementById('cold_water'));
+        var id=$.getUrlParam('id');
+        $.ajax({
+            url: "/devicehis_coldwater",
+            type: "POST",
+            data:{"id":id},
+            dataType: "json",
+            success: function(response) {
+                data_time=[];
+                data_tem=[];
+                for(var d in response["res"]){
+                    data_time.push(response["res"][d]["更新时间"]);
+                    data_tem.push(response["res"][d]["气缸冷却水温度"]);
+                }
+                option = {
+
+                    title:{
+                        left: 'center',
+                        text:'气缸冷却水温度'
+                    },
+                    legend:{
+                        data:['温度/℃']
+                    },
+                    xAxis: {
+                        axisLabel:{
+                            interval: 0,
+                            formatter: function (value) {
+                                //x轴的文字改为竖版显示
+                                var str = value.replace("2019-","").split("");
+                                return str.join("\n");
+                            }
+                        },
+                        boundaryGap: false,
+                        type: 'category',
+                        data: data_time
+                    },
+                    yAxis: {
+                        type: 'value',
+                        boundaryGap: [0, '100%'],
+                    },
+                    dataZoom: [{
+                        type: 'inside',
+                        show:true,
+                        start: 50,
+                        end: 100
+                    }, {
+                        start: 0,
+                        end: 100,
+                        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                        handleSize: '100%',
+                        handleStyle: {
+                            color: '#fff',
+                            shadowBlur: 3,
+                            shadowColor: 'rgba(0, 0, 0, 0.6)',
+                            shadowOffsetX: 2,
+                            shadowOffsetY: 2
+                        }
+                    }],
+
+                    series: [{
+                        smooth:true,
+                        name:"温度/℃",
+                        data: data_tem,
+                        type: 'line'
+                    }]
+                };
+                cold_Chart.setOption(option);
+            }
+        });
+        var dieseloil_Chart = echarts.init(document.getElementById('diesel_oil'));
+        $.ajax({
+            url: "/devicehis_dieseloil",
+            type: "POST",
+            data:{"id":id},
+            dataType: "json",
+            success: function(response) {
+                data_time=[];
+                data_tem=[];
+                for(var d in response["res"]){
+                    data_time.push(response["res"][d]["更新时间"]);
+                    data_tem.push(response["res"][d]["柴油量"]);
+                }
+                option = {
+                    title:{
+                        text:'柴油量'
+                    },
+                    legend:{
+                        data:['升/L']
+                    },
+                    xAxis: {
+                        axisLabel:{
+                            interval: 0,
+                            formatter: function (value) {
+                                //x轴的文字改为竖版显示
+                                var str = value.split("");
+                                return str.join("\n");
+                            }
+                        },
+                        type: 'category',
+                        data: data_time
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        name:"升/L",
+                        data: data_tem,
+                        type: 'bar'
+                    }]
+                };
+                dieseloil_Chart.setOption(option);
+            }
+        });
+        var Supercharger = echarts.init(document.getElementById('Supercharger'));
+        $.ajax({
+            url: "/devicehis_Supercharger",
+            type: "POST",
+            data:{"id":id},
+            dataType: "json",
+            success: function(response) {
+                data_time=[];
+                data_tem=[];
+                data_round=[];
+                for(var d in response["res"]){
+                    data_time.push(response["res"][d]["更新时间"]);
+                    data_tem.push(response["res"][d]["增压器压强"]);
+                    data_round.push(response["res"][d]["增压器转速"])
+                }
+                option = {
+                    title:{
+                        text:'增压器数据'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: data_time
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        name:"增压器压强",
+                        data: data_tem,
+                        markPoint: {
+                            data: [
+                                {type: 'max', name: '最大值'},
+                                {type: 'min', name: '最小值'}
+                            ]
+                        },
+                        markLine:{
+                            data:[
+                                {type:'average',name:'平均值',itemStyle:{
+                                        normal:{
+                                            color:'green'
+                                        }
+                                    }}
+                            ]
+                        },
+                    }, {
+                            name:'增压器转速',
+                            type:'line',
+                            data:data_round,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'},
+                                    {type: 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine:{
+                                data:[
+                                    {type:'average',name:'平均值',itemStyle:{
+                                            normal:{
+                                                color:'blue'
+                                            }
+                                        }}
+                                ]
+                            }
+                        }]
+                };
+                Supercharger.setOption(option);
+            }
+        });
+    });
+</script>
+</html>

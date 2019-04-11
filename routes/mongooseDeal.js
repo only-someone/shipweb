@@ -48,18 +48,39 @@ let mogo_ship={
         })
         return p;
     },
-    finddevicehis:(req,res)=>{
+    finddevicehis_coldwater:(req,res)=>{
         let id=req.body.id;
         console.log(id);
         let p =new Promise((resolve,reject)=>{
-            devicehis.find({"shipinfo":id},{},{limit:112},(err,doc)=>{
+            devicehis.find({"shipinfo":id},{"_id":0,"气缸冷却水温度":1,"更新时间":1},{limit:4032},(err,doc)=>{//24*60/5  *14
                 if(err){reject(err)}
-                resolve(doc);
+                resolve(doc);//需要去重，排序
             })
         })
         return p;
     },
-
+    finddevicehis_dieseloil:(req,res)=>{
+        let id=req.body.id;
+        console.log(id);
+        let p =new Promise((resolve,reject)=>{
+            devicehis.find({"shipinfo":id},{"_id":0,"柴油量":1,"更新时间":1},{limit:4032},(err,doc)=>{//24*60/5  *14
+                if(err){reject(err)}
+                resolve(doc);//需要去重，排序
+            })
+        })
+        return p;
+    },
+    finddevicehis_Supercharger:(req,res)=>{
+        let id=req.body.id;
+        console.log(id);
+        let p =new Promise((resolve,reject)=>{
+            devicehis.find({"shipinfo":id},{"_id":0,"增压器压强":1,"增压器转速":1,"更新时间":1},{limit:4032},(err,doc)=>{//24*60/5  *14
+                if(err){reject(err)}
+                resolve(doc);//需要去重，排序
+            })
+        })
+        return p;
+    },
     findidbyname:(req,res)=>{
     let p =new Promise((resolve,reject)=>{
         ship.find({"英文名":req.body.shipname},{"MMSI":1},(err,doc)=>{
@@ -84,7 +105,7 @@ let mogo_ship={
                     "船迹向": 1,
                     "航速": 1,
                     "？2nav_status": 1
-                }, {limit: 112}, (err, doc) => {//2个星期2*24*7/3
+                }, (err, doc) => {//2个星期2*24*7/3
                     if (err) {
                         reject(err)
                     }
@@ -104,7 +125,7 @@ let mogo_ship={
                     "船迹向": 1,
                     "航速": 1,
                     "？2nav_status": 1
-                }, {limit: 112}, (err, doc) => {//2个星期2*24*7/3
+                }, (err, doc) => {//2个星期2*24*7/3
                     if (err) {
                         reject(err)
                     }

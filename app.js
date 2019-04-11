@@ -10,6 +10,7 @@ const SHIP_SERVER = require('./routes/shipserver')
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var multer  = require('multer')
+
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/ship', {useNewUrlParser: true});
 var db = mongoose.connection;
@@ -19,6 +20,7 @@ db.once('open', function() {
 });
 
 var app = express();
+app.use(express.static("./www"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 var upload = multer({ dest: './csvfile' });
@@ -72,9 +74,17 @@ app.post('/shiphis', (req,res)=>{
 app.post('/device', (req,res)=>{
     SHIP_SERVER.finddevice(res,req);
 });
-app.post('/devicehis', (req,res)=>{
+app.post('/devicehis_coldwater', (req,res)=>{
     console.log("devicehis")
-    SHIP_SERVER.finddevicehis(res,req);
+    SHIP_SERVER.finddevicehis_coldwater(res,req);
+});
+app.post('/devicehis_Supercharger', (req,res)=>{
+    console.log("devicehis")
+    SHIP_SERVER.finddevicehis_Supercharger(res,req);
+});
+app.post('/devicehis_dieseloil', (req,res)=>{
+    console.log("devicehis")
+    SHIP_SERVER.finddevicehis_dieseloil(res,req);
 });
 app.post('/id', (req,res)=>{
     console.log("devicehis")
@@ -87,6 +97,11 @@ app.get('/all', (req,res)=>{
 app.get('/upload', (req,res)=>{
     console.log("upload")
     res.sendFile( __dirname  + "/views/upload2.html" );
+});
+
+app.get('/devicehis', (req,res)=>{
+    console.log("devicehis")
+    res.sendFile( __dirname  + "/views/device.html" );
 });
 app.post('/file_upload',upload.array('files',9),function (req, res) {
     console.log(req.files[0].originalname);
@@ -117,3 +132,4 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+//计算平均值

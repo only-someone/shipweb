@@ -17,6 +17,7 @@
 </head>
 <body>
 <div id="container" tabindex="0"></div>
+<script src="//a.amap.com/jsapi_demos/static/resource/heatmapData.js"></script>
 <script type="text/javascript">
     (function ($) {
         $.getUrlParam = function (id) {
@@ -39,9 +40,12 @@
             dataType: 'json',
             success: function (response) {
                 var path=[]
+                var heatdata=[]
                 //alert(JSON.stringify(response))
                 for (var doc in response["res"]) {
-                    path.push(response["res"][doc]["GPS"])
+                    if(doc<112)
+                        path.push(response["res"][doc]["GPS"])
+                    heatdata.push({"lng":response["res"][doc]["GPS"][0],"lat":response["res"][doc]["GPS"][1],count:1})
                 }
                 //path.reverse()
                 var map = new AMap.Map('container', {
@@ -50,6 +54,33 @@
                     zoom: 300,
                     mapStyle: 'amap://styles/whitesmoke',
                 });
+                var heatmap;
+                map.plugin(["AMap.Heatmap"], function () {
+                    //初始化heatmap对象
+                    heatmap = new AMap.Heatmap(map, {
+                        radius: 25, //给定半径
+                        opacity: [0, 0.8]
+                        /*,
+                        gradient:{
+                            0.5: 'blue',
+                            0.65: 'rgb(117,211,248)',
+                            0.7: 'rgb(0, 255, 0)',
+                            0.9: '#ffea00',
+                            1.0: 'red'
+                        }
+                         */
+                    });
+                    //设置数据集：该数据为北京部分“公园”数据
+                    //alert(JSON.stringify(heatdata))
+                    //alert(path.length)
+                    //alert(heatdata.length)
+                    heatmap.setDataSet({
+                        data: heatdata,
+                        max: 100
+                    });
+                    heatmap.show();
+                });
+
                 //alert(path);
                 var micon = new AMap.Icon({
                     size: new AMap.Size(40, 50),    // 图标尺寸
