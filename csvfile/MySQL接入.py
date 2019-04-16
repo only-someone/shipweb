@@ -71,10 +71,3 @@ if __name__ == "__main__":
                     os.remove(filename)
         time.sleep(60)
 
-
-#mysql> SELECT * FROM passwd INTO OUTFILE '/tmp/runoob.txt'
-#    -> FIELDS TERMINATED BY ',' ENCLOSED BY '"'
-#    -> LINES TERMINATED BY '\r\n';
-#    导出csv文件，约定数据格式
-#MySQL标记位记录是否导出或者利用时间从最新的开始导出直到上一次导出时间
-

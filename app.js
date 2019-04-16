@@ -12,7 +12,8 @@ var fs = require('fs');
 var multer  = require('multer')
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/ship', {useNewUrlParser: true});
+//mongoose.connect('mongodb://admin:djw@www.shipdata.tk:27017/admin',{useNewUrlParser: true});
+mongoose.connect('mongodb://localhost:27017/ship', {useNewUrlParser: true});//本地
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -103,7 +104,7 @@ app.get('/devicehis', (req,res)=>{
     console.log("devicehis")
     res.sendFile( __dirname  + "/views/device.html" );
 });
-app.post('/file_upload',upload.array('files',9),function (req, res) {
+app.post('/file_upload',upload.array('files',100),function (req, res) {
     console.log(req.files[0].originalname);
     var newName=req.files[0].path+path.parse(req.files[0].originalname).ext;
     fs.rename(req.files[0].path,newName,function(err){
