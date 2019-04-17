@@ -18,8 +18,9 @@ if __name__ == "__main__":
         for filename in os.listdir():
             if(filename!="MySQL接入.py"):
                 try:
-                    with open(filename,encoding='UTF-8') as csvfile:
+                    with open(filename,encoding='utf-8-sig') as csvfile:
                         csv_reader = csv.reader(csvfile)  # 使用csv.reader读取csvfile中的文件
+                        birth_header = next(csv_reader)
                         for device in csv_reader:
                             data={
                                 "_id":device[0],
@@ -37,31 +38,42 @@ if __name__ == "__main__":
                                 '增压器压强':device[11],
                                 '海水温度':device[12],
                                 '机舱温度':device[13],
-                                '更新时间':device[14],
+                                '发动机状态':device[14],
+                                '增压器状态':device[15],
+                                '气缸状态':device[16],
+                                '油箱状态':device[17],
+                                '更新时间':device[18],
                             }
                             datahis = {
                                 "shipinfo": device[0],
-                                "发电机功率": device[1],
-                                '主机平均转速': device[2],
-                                '增压器转速': device[3],
-                                '气缸排气量': device[4],
-                                '气缸冷却水温度': device[5],
-                                '燃料油量': device[6],
-                                '柴油量': device[7],
-                                '活塞冷却水温度': device[8],
-                                '机油温度': device[9],
-                                '减速箱油压': device[10],
-                                '增压器压强': device[11],
-                                '海水温度': device[12],
-                                '机舱温度': device[13],
-                                '更新时间': device[14],
+                                "发电机功率":device[1],
+                                '主机平均转速':device[2],
+                                '增压器转速':device[3],
+                                '气缸排气量':device[4],
+                                '气缸冷却水温度':device[5],
+                                '燃料油量':device[6],
+                                '柴油量':device[7],
+                                '活塞冷却水温度':device[8],
+                                '机油温度':device[9],
+                                '减速箱油压':device[10],
+                                '增压器压强':device[11],
+                                '海水温度':device[12],
+                                '机舱温度':device[13],
+                                '发动机状态':device[14],
+                                '增压器状态':device[15],
+                                '气缸状态':device[16],
+                                '油箱状态':device[17],
+                                '更新时间':device[18],
                             }
 
-                            current_device=collection_device.find_one({"_id":device[0]})
-                            current_date=time.mktime(time.strptime(current_device["更新时间"],"%Y-%m-%d/%H/%M"))
-                            date=time.mktime(time.strptime(device[14],"%Y-%m-%d/%H/%M"))
-                            if current_date<date:
-                                print(device[0]+"更新")
+                            current_device = collection_device.find_one({"_id": device[0]})
+                            print(device[18])
+                            current_date = time.mktime(time.strptime(current_device["更新时间"], "%Y-%m-%d/%H/%M"))
+
+
+                            date = time.mktime(time.strptime(device[18], "%Y-%m-%d/%H/%M"))
+                            if current_date < date:
+                                print(device[0] + "更新")
                                 collection_device.save(data)
                             collection_devicehis.insert(datahis)
                         csvfile.close()

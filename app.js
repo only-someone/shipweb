@@ -99,7 +99,14 @@ app.get('/upload', (req,res)=>{
     console.log("upload")
     res.sendFile( __dirname  + "/views/upload2.html" );
 });
-
+app.get('/device.csv', (req,res)=>{
+    console.log("下载")
+    res.sendFile( __dirname  + "/devicedata/device_data.csv" );
+});
+app.get('/download', (req,res)=>{
+    console.log("devicehis")
+    res.sendFile( __dirname  + "/views/download.html" );
+});
 app.get('/devicehis', (req,res)=>{
     console.log("devicehis")
     res.sendFile( __dirname  + "/views/device.html" );

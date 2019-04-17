@@ -43,7 +43,7 @@
                 var heatdata=[]
                 //alert(JSON.stringify(response))
                 for (var doc in response["res"]) {
-                    if(doc<112)
+                    if(doc<720)//一个月
                         path.push(response["res"][doc]["GPS"])
                     heatdata.push({"lng":response["res"][doc]["GPS"][0],"lat":response["res"][doc]["GPS"][1],count:1})
                 }
