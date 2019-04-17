@@ -67,7 +67,7 @@ if __name__ == "__main__":
                             }
 
                             current_device = collection_device.find_one({"_id": device[0]})
-                            print(device[18])
+                            
                             current_date = time.mktime(time.strptime(current_device["更新时间"], "%Y-%m-%d/%H/%M"))
 
 
