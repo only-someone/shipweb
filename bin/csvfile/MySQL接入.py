@@ -67,10 +67,12 @@ if __name__ == "__main__":
                             }
 
                             current_device = collection_device.find_one({"_id": device[0]})
-                            
-                            current_date = time.mktime(time.strptime(current_device["更新时间"], "%Y-%m-%d/%H/%M"))
-
-
+                            print(device[18])
+                            try:
+                                current_date = time.mktime(time.strptime(current_device["更新时间"], "%Y-%m-%d/%H/%M"))
+                            except Exception as e:
+                                print(e)
+                                current_date = time.mktime(time.strptime("2017-01-01/1/1", "%Y-%m-%d/%H/%M"))
                             date = time.mktime(time.strptime(device[18], "%Y-%m-%d/%H/%M"))
                             if current_date < date:
                                 print(device[0] + "更新")

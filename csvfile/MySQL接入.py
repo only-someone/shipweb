@@ -73,7 +73,6 @@ if __name__ == "__main__":
                             except Exception as e:
                                 print(e)
                                 current_date = time.mktime(time.strptime("2017-01-01/1/1", "%Y-%m-%d/%H/%M"))
-
                             date = time.mktime(time.strptime(device[18], "%Y-%m-%d/%H/%M"))
                             if current_date < date:
                                 print(device[0] + "更新")
