@@ -3,6 +3,7 @@ const shipdyna=require("./mongoose/models/shipdyna");
 const shipdynahis=require("./mongoose/models/shipdynahis");
 const device=require("./mongoose/models/device");
 const devicehis=require("./mongoose/models/devicehis");
+const shippath=require("./mongoose/models/shippath");
 let mogo_ship={
     findship:(req,res)=>{
         let{shipname,id}=req.body;
@@ -173,6 +174,17 @@ let mogo_ship={
                     resolve(doc)
                 })
             }
+        })
+        return p;
+    },
+    findshippath:(req,res)=>{
+        let id=req.body.id;
+        console.log(id);
+        let p =new Promise((resolve,reject)=>{
+            shippath.findOne({"MMSI":id},{"_id":0,"regular_path":1},(err,doc)=>{
+                if(err){reject(err)}
+                resolve(doc);
+            })
         })
         return p;
     },

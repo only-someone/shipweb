@@ -1,11 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <title>下载设备历史数据</title>
-</head>
-<body>
-<button type="button" onclick="window.location.href ='/device.csv'">下载设备历史数据（scv格式）</button>
+    <style>
+        html,
+        body{
+            background-size:100%;
+            text-align: center;
+        }
+        H3{
+            margin-top: 15%;
+            font-size: 30px;
+            text-align: center;
+        }
+        .download{
+            background-color: #68b12f;
+            background: -webkit-gradient(linear, left top, left bottom, from(#68b12f), to(#50911e));
+            background: -webkit-linear-gradient(top, #68b12f, #50911e);
+            background: -moz-linear-gradient(top, #68b12f, #50911e);
+            background: -ms-linear-gradient(top, #68b12f, #50911e);
+            background: -o-linear-gradient(top, #68b12f, #50911e);
+            background: linear-gradient(top, #68b12f, #50911e);
+            border: 1px solid #509111;
+            border-bottom: 1px solid #5b992b;
+            border-radius: 3px;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            -ms-border-radius: 3px;
+            -o-border-radius: 3px;
+            box-shadow: inset 0 1px 0 0 #9fd574;
+            -webkit-box-shadow: 0 1px 0 0 #9fd574 inset ;
+            -moz-box-shadow: 0 1px 0 0 #9fd574 inset;
+            -ms-box-shadow: 0 1px 0 0 #9fd574 inset;
+            -o-box-shadow: 0 1px 0 0 #9fd574 inset;
+            color: white;
+            font-weight: bold;
+            padding: 6px 20px;
+            text-shadow: 0 -1px 0 #396715;
+            font-size: 20px;
+        }
+        .download:hover {
+            opacity:.85;
+            cursor: pointer;
+        }
+        .download:active {
+            border: 1px solid #20911e;
+            box-shadow: 0 0 10px 5px #356b0b inset;
+            -webkit-box-shadow:0 0 10px 5px #356b0b inset ;
 
+            -moz-box-shadow: 0 0 10px 5px #356b0b inset;
+            -ms-box-shadow: 0 0 10px 5px #356b0b inset;
+            -o-box-shadow: 0 0 10px 5px #356b0b inset;
+        }
+    </style>
+</head>
+<H3>设备历史数据（csv格式）</H3>
+<body  background="http://attachments.gfan.com/forum/attachments2/201409/09/002725rms8vsb1mpv7biir.jpg">
+<button type="button" class="download" onclick="window.location.href ='/device.csv'">点击下载</button>
 </body>
 </html>

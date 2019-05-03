@@ -71,7 +71,10 @@ app.post('/shipdetail', (req,res)=>{
 app.post('/shiphis', (req,res)=>{
     SHIP_SERVER.findhis(res,req);
 });
-
+app.post('/shippath', (req,res)=>{
+    console.log("devicehis")
+    SHIP_SERVER.findshippath(res,req);
+});
 app.post('/device', (req,res)=>{
     SHIP_SERVER.finddevice(res,req);
 });
@@ -79,6 +82,7 @@ app.post('/devicehis_coldwater', (req,res)=>{
     console.log("devicehis")
     SHIP_SERVER.finddevicehis_coldwater(res,req);
 });
+
 app.post('/devicehis_Supercharger', (req,res)=>{
     console.log("devicehis")
     SHIP_SERVER.finddevicehis_Supercharger(res,req);

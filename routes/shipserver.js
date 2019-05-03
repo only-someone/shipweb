@@ -18,6 +18,12 @@ const SHIP_SERVER={
             res.json({res:doc})
         })
     },
+    findshippath:(res,req)=>{
+        mongo_ship.findshippath(req,res).then(doc=>{
+            res.json({res:doc})
+            console.log("shipserver")
+        })
+    },
     finddevice:(res,req)=>{
         mongo_ship.finddevice(req,res).then(doc=>{
         res.json({res:doc})

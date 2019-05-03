@@ -17,7 +17,6 @@
 </head>
 <body>
 <div id="container" tabindex="0"></div>
-<script src="//a.amap.com/jsapi_demos/static/resource/heatmapData.js"></script>
 <script type="text/javascript">
     (function ($) {
         $.getUrlParam = function (id) {
@@ -43,8 +42,8 @@
                 var heatdata=[]
                 //alert(JSON.stringify(response))
                 for (var doc in response["res"]) {
-                    if(doc<720)//一个月
-                        path.push(response["res"][doc]["GPS"])
+                    if(response["res"].length-169<doc&&doc<response["res"].length)//三天
+                        path.push(response["res"][doc]["GPS"])//最新在最前
                     heatdata.push({"lng":response["res"][doc]["GPS"][0],"lat":response["res"][doc]["GPS"][1],count:1})
                 }
                 //path.reverse()
@@ -70,10 +69,6 @@
                         }
                          */
                     });
-                    //设置数据集：该数据为北京部分“公园”数据
-                    //alert(JSON.stringify(heatdata))
-                    //alert(path.length)
-                    //alert(heatdata.length)
                     heatmap.setDataSet({
                         data: heatdata,
                         max: 100
@@ -87,7 +82,6 @@
                     image:  "http://pic.90sjimg.com/design/00/56/26/96/5928215e841cb.png",  // Icon的图像
                     imageSize: new AMap.Size(40, 50)   // 根据所设置的大小拉伸或压缩图片
                 });
-
                 var startmarker = new AMap.Marker({
                     map: map,
                     position: path[0],
@@ -95,7 +89,6 @@
                     autoRotation: true,
                     angle:-90,
                 });
-
                 AMap.event.addListener(startmarker, "click", function () {
                     getdevice(id).then(data => {
                         content=JSON.stringify(data.device);
@@ -105,14 +98,13 @@
                         infoWindow.open(map,path[path.length-1]);
                     });
                 });
-
                 var polyline = new AMap.Polyline({
                     path: path,
                     showDir:true,
-                    borderWeight: 3, // 线条宽度，默认为 1
+                    strokeWeight: 6,
                     strokeColor: 'blue', // 线条颜色
-                    lineJoin: 'round' // 折线拐点连接处样式
-                    // strokeStyle: "solid"  //线样式
+                    //lineJoin: 'round' // 折线拐点连接处样式
+
                 });
                 map.add(polyline);
                 var passedPolyline = new AMap.Polyline({
@@ -121,8 +113,9 @@
                     strokeColor: "red",  //线颜色
                     // strokeOpacity: 1,     //线透明度
                     strokeWeight: 6,      //线宽
-                                            //播放速度
-                    // strokeStyle: "solid"  //线样式
+
+                    //播放速度
+
                 });
 
 
@@ -148,8 +141,42 @@
                 function stopAnimation () {
                     startmarker.stopMove();
                 }
+                $.ajax({
+                    url: '/shippath',
+                    type: 'post',
+                    data: data,
+                    dataType: 'json',
+                    success: function (response) {
+                        var regular_path=[]
+                        //alert(JSON.stringify(response))
+                        var res=response["res"]["regular_path"].replace(/\),/g,":").replace(/\(/g,"").replace(/\)/g,"").split(":")
+                        for(var i in res){
+                            var gps=res[i].split(",")
+                            regular_path.push(gps)
+                        }
+                        var marker = new AMap.Marker({
+                            position: regular_path[regular_path.length-1], //位置
+                            map: map
+                        });
+
+                        marker.setMap(map); //添加到地图
+                        //regular_path.push(response["res"]["regular_path"].replace(/\(/g,"").replace(/\)/g,""))//最新在最前alert(regular_path)
+                        var polyline2 = new AMap.Polyline({
+                            path: regular_path,
+                            showDir:true,
+                            strokeWeight: 6, // 线条宽度，默认为 1
+                            strokeColor: 'black', // 线条颜色
+                            lineJoin: 'round' // 折线拐点连接处样式
+                            // strokeStyle: "solid"  //线样式
+                        });
+                        map.add(polyline2)
+
+
+                    }
+                })
             }
         })
+
     })
     getdevice = function(shipid) {
         var id=$.getUrlParam('id')
@@ -170,6 +197,7 @@
             });
         });
     };
+
 </script>
 
 </body>
