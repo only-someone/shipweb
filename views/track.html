@@ -94,7 +94,7 @@
                         content=[]
                         var res=JSON.stringify(data.device).replace(/:/g,",").replace(/{/g,'').replace(/}/g,"").replace(/"/g,"").replace(/"/g,"").split(",")
                         //alert(res)
-                        var title=data.device["shipinfo"]
+                        var title=data.device["英文名"]+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+data.device["shipinfo"]
                         content.push("<table  class='title'width=\"600\" align='center'><tr style='font-size: 30px;'>"+title+"</tr></table>")
                         content.push("<table class=\"shipinfo\" width=\"600\" >")
                         for(var i=2;i<36;i=i+4){
@@ -158,17 +158,25 @@
                     dataType: 'json',
                     success: function (response) {
                         var regular_path=[]
-                        //alert(JSON.stringify(response))
-                        var res=response["res"]["regular_path"].replace(/\),/g,":").replace(/\(/g,"").replace(/\)/g,"").split(":")
+
+                        var res=response["res"]["regular_path"].replace(/\),/g,"):").split(":")
                         for(var i in res){
-                            var gps=res[i].split(",")
+                            var gps=res[i].replace(/\)/g,"").replace(/\(/g,"").split(",")
                             regular_path.push(gps)
+                        }
+                        //alert(res[res.length-1].replace("(","").replace(")","").split(",")[0])
+                        x1=parseFloat(path[path.length-1].toString().split(",")[0])
+                        y1=parseFloat(path[path.length-1].toString().split(",")[1])
+                        x2=parseFloat(res[res.length-1].replace("(","").replace(")","").split(",")[0])
+                        y2=parseFloat(res[res.length-1].replace("(","").replace(")","").split(",")[1])
+
+                        if(JuadgeDir(x1,y1,x1,y2)>0.08 ){
+                            regular_path.push(path[path.length-1])
                         }
                         var marker = new AMap.Marker({
                             position: regular_path[regular_path.length-1], //位置
                             map: map
                         });
-                       
                         marker.setMap(map); //添加到地图
                         //regular_path.push(response["res"]["regular_path"].replace(/\(/g,"").replace(/\)/g,""))//最新在最前alert(regular_path)
                         var polyline2 = new AMap.Polyline({
@@ -206,6 +214,10 @@
                 }
             });
         });
+    };
+    JuadgeDir = function(x1,y1,x2,y2) {
+        var Double =Math.sqrt(Math.pow(x1-x2,2)+Math.pow(y1-y2,2))
+        return Double
     };
 
 </script>

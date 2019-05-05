@@ -84,6 +84,8 @@
                   content.push("<table class='title'width=\"400\" align='center'><tr>"+title+"</tr></table>")
                   content.push("<table class=\"shipinfo\" width=\"400\" >")
                   for(var i=2;i<28;i=i+4){
+                      if(res[i+1]==="null"){res[i+1]=""}
+                      if(res[i+3]==="null"){res[i+3]=""}
                     content.push("<tr ><td width='50px' style=\"color: midnightblue;\" >"+res[i]+"</td><td width='200px'style=\"color: red;\">"+res[i+1]+"</td>" +
                             "<td  width='150px'style=\"color: midnightblue;\" > "+res[i+2]+" </td><td  width='200px'style=\"color: red;\">"+res[i+3]+"</td> </tr>")
                   }

@@ -25,55 +25,57 @@ if __name__ == "__main__":
                             data={
                                 "_id":device[0],
                                 "shipinfo":device[0],
-                                "发电机功率":device[1],
-                                '主机平均转速':device[2],
-                                '增压器转速':device[3],
-                                '气缸排气量':device[4],
-                                '气缸冷却水温度':device[5],
-                                '燃料油量':device[6],
-                                '柴油量':device[7],
-                                '活塞冷却水温度':device[8],
-                                '机油温度':device[9],
-                                '减速箱油压':device[10],
-                                '增压器压强':device[11],
-                                '海水温度':device[12],
-                                '机舱温度':device[13],
-                                '发动机状态':device[14],
-                                '增压器状态':device[15],
-                                '气缸状态':device[16],
-                                '油箱状态':device[17],
-                                '更新时间':device[18],
+                                "英文名":device[1],
+                                "发电机功率":device[2],
+                                '主机平均转速':device[3],
+                                '增压器转速':device[4],
+                                '气缸排气量':device[5],
+                                '气缸冷却水温度':device[6],
+                                '燃料油量':device[7],
+                                '柴油量':device[8],
+                                '活塞冷却水温度':device[9],
+                                '机油温度':device[10],
+                                '减速箱油压':device[11],
+                                '增压器压强':device[12],
+                                '海水温度':device[13],
+                                '机舱温度':device[14],
+                                '发动机状态':device[15],
+                                '增压器状态':device[16],
+                                '气缸状态':device[17],
+                                '油箱状态':device[18],
+                                '更新时间':device[19],
                             }
                             datahis = {
-                                "shipinfo": device[0],
-                                "发电机功率":device[1],
-                                '主机平均转速':device[2],
-                                '增压器转速':device[3],
-                                '气缸排气量':device[4],
-                                '气缸冷却水温度':device[5],
-                                '燃料油量':device[6],
-                                '柴油量':device[7],
-                                '活塞冷却水温度':device[8],
-                                '机油温度':device[9],
-                                '减速箱油压':device[10],
-                                '增压器压强':device[11],
-                                '海水温度':device[12],
-                                '机舱温度':device[13],
-                                '发动机状态':device[14],
-                                '增压器状态':device[15],
-                                '气缸状态':device[16],
-                                '油箱状态':device[17],
-                                '更新时间':device[18],
+                                "shipinfo":device[0],
+                                "英文名":device[1],
+                                "发电机功率":device[2],
+                                '主机平均转速':device[3],
+                                '增压器转速':device[4],
+                                '气缸排气量':device[5],
+                                '气缸冷却水温度':device[6],
+                                '燃料油量':device[7],
+                                '柴油量':device[8],
+                                '活塞冷却水温度':device[9],
+                                '机油温度':device[10],
+                                '减速箱油压':device[11],
+                                '增压器压强':device[12],
+                                '海水温度':device[13],
+                                '机舱温度':device[14],
+                                '发动机状态':device[15],
+                                '增压器状态':device[16],
+                                '气缸状态':device[17],
+                                '油箱状态':device[18],
+                                '更新时间':device[19],
                             }
 
                             current_device = collection_device.find_one({"_id": device[0]})
-                            print(device[18])
+                            print(device[19])
                             try:
                                 current_date = time.mktime(time.strptime(current_device["更新时间"], "%Y-%m-%d/%H/%M"))
                             except Exception as e:
                                 print(e)
                                 current_date = time.mktime(time.strptime("2017-01-01/1/1", "%Y-%m-%d/%H/%M"))
-                            date = time.mktime(time.strptime(device[18], "%Y-%m-%d/%H/%M"))
+                            date = time.mktime(time.strptime(device[19], "%Y-%m-%d/%H/%M"))
                             if current_date < date:
                                 print(device[0] + "更新")
                                 collection_device.save(data)
