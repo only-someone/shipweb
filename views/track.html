@@ -171,9 +171,7 @@
                         x2=parseFloat(res[res.length-1].replace("(","").replace(")","").split(",")[0])
                         y2=parseFloat(res[res.length-1].replace("(","").replace(")","").split(",")[1])
 
-                        if(JuadgeDir(x1,y1,x1,y2)>0.08 ){
-                            regular_path.push(path[path.length-1])
-                        }
+
                         var marker = new AMap.Marker({
                             position: regular_path[regular_path.length-1], //位置
                             map: map
