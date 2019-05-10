@@ -26,9 +26,9 @@
     <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-<div id="cold_water" style="width:1500px;height:800px;top:10px;"></div>
-<div id="diesel_oil" style="width:1500px;height:800px;top:400px;"></div>
-<div id="Supercharger" style="width:1500px;height:500px;top:800px;"></div>
+<div id="cold_water" style="width:1500px;height:500px;top:100px;"></div>
+<div id="diesel_oil" style="width:1500px;height:800px;top:100px;"></div>
+<div id="Supercharger" style="width:1500px;height:500px;top:100px;"></div>
 </body>
 <script type="text/javascript">
     (function ($) {
@@ -39,8 +39,8 @@
         }
     })(jQuery);
     $(document).ready(function() {
-        var cold_Chart = echarts.init(document.getElementById('cold_water'));
         var id=$.getUrlParam('id');
+        var cold_Chart = echarts.init(document.getElementById('cold_water'));
         $.ajax({
             url: "/devicehis_coldwater",
             type: "POST",
@@ -49,14 +49,14 @@
             success: function(response) {
                 data_time=[];
                 data_tem=[];
+                //alert(JSON.stringify(response["res"]))
                 for(var d in response["res"]){
                     data_time.push(response["res"][d]["更新时间"]);
                     data_tem.push(response["res"][d]["气缸冷却水温度"]);
                 }
+                //alert(data_tem)
                 option = {
-
                     title:{
-                        left: 'center',
                         text:'气缸冷却水温度'
                     },
                     legend:{
@@ -64,11 +64,14 @@
                     },
                     xAxis: {
                         axisLabel:{
-                            interval: 0,
+                            show:true,
+                            interval: 0,//,    // {number}
                             formatter: function (value) {
                                 //x轴的文字改为竖版显示
-                                var str = value.replace("2019-","").split("");
-                                return str.join("\n");
+                                //alert(value)
+                                var str = value.replace("2019-","").split("/");
+                                var res =[str[0],str[1]+":"+str[2]]
+                                return res.join("\n");
                             }
                         },
                         boundaryGap: false,
@@ -77,11 +80,14 @@
                     },
                     yAxis: {
                         type: 'value',
+                        axisLabel: {
+                            formatter: '{value} °C'
+                        },
                         boundaryGap: [0, '100%'],
                     },
                     dataZoom: [{
                         type: 'inside',
-                        show:true,
+                        show:false,
                         start: 50,
                         end: 100
                     }, {
@@ -102,8 +108,28 @@
                         smooth:true,
                         name:"温度/℃",
                         data: data_tem,
-                        type: 'line'
-                    }]
+                        type: 'line',
+                        symbolSize:6,//控制折线图上表示数值的图标的大小
+                        symbol:'emptyCircle',//控制折线图上表示数值的样式
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'}
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'},
+                                {type:'average',name:'平均值',itemStyle:{
+                                        normal:{
+                                            color:'black'
+                                        }
+                                    }}
+                            ]
+                        }
+                    }],
+
                 };
                 cold_Chart.setOption(option);
             }
@@ -133,21 +159,68 @@
                             interval: 0,
                             formatter: function (value) {
                                 //x轴的文字改为竖版显示
-                                var str = value.split("");
-                                return str.join("\n");
+                                var str = value.replace("2019-","").split("/");
+                                var res =[str[0],str[1]+":"+str[2]]
+                                return res.join("\n");
                             }
                         },
                         type: 'category',
                         data: data_time
                     },
+                    dataZoom: [{
+                        type: 'inside',
+                        show:false,
+                        start: 50,
+                        end: 100
+                    }, {
+                        start: 0,
+                        end: 100,
+                        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                        handleSize: '100%',
+                        handleStyle: {
+                            color: '#fff',
+                            shadowBlur: 3,
+                            shadowColor: 'rgba(0, 0, 0, 0.6)',
+                            shadowOffsetX: 2,
+                            shadowOffsetY: 2
+                        }
+                    }],
                     yAxis: {
-                        type: 'value'
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} L'
+                        }
                     },
                     series: [{
                         name:"升/L",
                         data: data_tem,
-                        type: 'bar'
-                    }]
+                        type: 'bar',
+                        itemStyle : { normal: {label : {show: true}}},//控制统计图上显示数据
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'}
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值',itemStyle:{
+                                        normal:{
+                                            color:'black'
+                                        }
+                                    }},
+                                {type:'average',name:'平均值',itemStyle:{
+                                        normal:{
+                                            color:'black'
+                                        }
+                                    }}
+                            ],
+                            color:"#EE9201",
+                        },
+
+                    }],
+
                 };
                 dieseloil_Chart.setOption(option);
             }
@@ -167,55 +240,83 @@
                     data_tem.push(response["res"][d]["增压器压强"]);
                     data_round.push(response["res"][d]["增压器转速"])
                 }
-                option = {
+                //alert(data_tem)
+                var  option = {
                     title:{
                         text:'增压器数据'
                     },
                     xAxis: {
+                        axisLabel:{
+                            show:true,
+                            interval: 0,//,    // {number}
+                            formatter: function (value) {
+                                //x轴的文字改为竖版显示
+                                //alert(value)
+                                var str = value.replace("2019-","").split("/");
+                                var res =[str[0],str[1]+":"+str[2]]
+                                return res.join("\n");
+                            }
+                        },
                         type: 'category',
                         data: data_time
                     },
-                    yAxis: {
-                        type: 'value'
-                    },
-                    series: [{
-                        name:"增压器压强",
-                        data: data_tem,
-                        markPoint: {
-                            data: [
-                                {type: 'max', name: '最大值'},
-                                {type: 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine:{
-                            data:[
-                                {type:'average',name:'平均值',itemStyle:{
-                                        normal:{
-                                            color:'green'
-                                        }
-                                    }}
-                            ]
-                        },
-                    }, {
-                            name:'增压器转速',
-                            type:'line',
-                            data:data_round,
-                            markPoint: {
-                                data: [
-                                    {type: 'max', name: '最大值'},
-                                    {type: 'min', name: '最小值'}
-                                ]
+                    yAxis: [
+                        {
+                            type: 'value',
+                            name: '增压器转速（转/s)',
+                            min: 0,
+                            max: 10000,
+                            interval: 400,
+                            axisLabel: {
+                                formatter: '{value}'
                             },
-                            markLine:{
-                                data:[
-                                    {type:'average',name:'平均值',itemStyle:{
-                                            normal:{
-                                                color:'blue'
-                                            }
-                                        }}
-                                ]
-                            }
-                        }]
+                            nameLocation:'center',
+                            nameGap:65
+                        },
+                        {
+                            type: 'value',
+                            name: '增压器压强（Pa）',
+                            min: 0,
+                            max: 100,
+                            // interval: 15000,
+                            axisLabel: {
+                                formatter: '{value}'
+                            },
+                            nameLocation:'center',
+                            nameGap:65,
+                            nameRotate:-90
+                        }
+                    ],
+                    series: [
+                        {
+                            name:'增压器转速',
+                            type:'bar',
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true,
+                                        position: 'top',
+                                    },
+                                    color:"orange"
+                                }
+                            },
+                            data:data_round
+                        },
+                        {
+                            name:'增压器压强',
+                            type:'line',
+                            yAxisIndex: 1,
+                            itemStyle : {  /*设置折线颜色*/
+                                normal : {
+                                    label: {
+                                        show: true,
+                                        position: 'top',
+                                    }
+                                }
+                            },
+                            data:data_tem
+                        }
+                    ]
                 };
                 Supercharger.setOption(option);
             }
