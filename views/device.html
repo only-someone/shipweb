@@ -354,13 +354,21 @@
                             },
                             markLine : {
                                 data : [
-                                    {type : 'max', name: '最大值'},
-                                    {type : 'min', name: '最小值'},
+                                    {type : 'max', name: '最大值',itemStyle:{
+                                            normal:{
+                                                color:'black'
+                                            }
+                                        }},
+                                    {type : 'min', name: '最小值',itemStyle:{
+                                            normal:{
+                                                color:'black'
+                                            }
+                                        }},
                                     {type:'average',name:'平均值',itemStyle:{
                                             normal:{
                                                 color:'black'
                                             }
-                                        }}
+                                        }},
                                 ]
                             },
                             data:data_round
@@ -388,12 +396,7 @@
                                 data : [
                                     {type : 'max', name: '最大值'},
                                     {type : 'min', name: '最小值'},
-                                    {type:'average',name:'平均值',itemStyle:{
-                                            normal:{
-                                                color:'black'
-                                 
-                                            }
-                                        }}
+                                    {type:'average',name:'平均值'},
                                 ]
                             },
                             data:data_tem
