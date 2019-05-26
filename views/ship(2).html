@@ -123,22 +123,34 @@
       };
       idhref=function () {
         var id = document.getElementById("text").value;
-        window.location.href = "/trace?id="+id;
+        if(id===""){
+            alert("MMSI输入为空")
+        }
+        else{window.location.href = "/trace?id="+id;}
       }
       namehref=function () {
         var name = document.getElementById("text").value;
-        $.ajax({
-          url: "/id",
-          type: "POST",
-          data: {shipname: name},
-          dataType: "json",
-          success: function (response) {
-            //alert(JSON.stringify(response["res"]))
-            window.location.href = "/trace?id=" + response["res"][0]["MMSI"];
-          }
-        })
-      }
 
+        if(name===""){
+              alert("英文名输入为空")
+        }
+        else{
+            $.ajax({
+                url: "/id",
+                type: "POST",
+                data: {shipname: name},
+                dataType: "json",
+                success: function (response) {
+                    //alert(JSON.stringify(response["res"]))
+                    if(JSON.stringify(response["res"])==="[]"){
+                        alert("未找到船舶")
+                    }
+                    else{window.location.href = "/trace?id=" + response["res"][0]["MMSI"];}
+
+                }
+            })
+        }
+      }
     </script>
   </body>
 </html>

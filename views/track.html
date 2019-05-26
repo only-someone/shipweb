@@ -40,7 +40,11 @@
             success: function (response) {
                 var path=[]
                 var heatdata=[]
-                //alert(JSON.stringify(response))
+                if(JSON.stringify(response["res"])==="[]"){
+                    window.location.href = "/ships";
+                    alert("无法找到船舶")
+                }
+                //alert(JSON.stringify(response["res"])==="[]")
                 for (var doc in response["res"]) {
                     if(response["res"].length-169<doc&&doc<response["res"].length)//三天
                         path.push(response["res"][doc]["GPS"])//最新在最前
