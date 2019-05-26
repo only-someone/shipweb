@@ -26,9 +26,9 @@
     <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-<div id="cold_water" style="width:1500px;height:500px;top:100px;"></div>
-<div id="diesel_oil" style="width:1500px;height:500px;top:100px;"></div>
-<div id="Supercharger" style="width:1500px;height:500px;top:100px;"></div>
+<div id="cold_water" style="width: 80%;height:500px;top:100px;"></div>
+<div id="diesel_oil" style="width:80%;height:500px;top:100px;"></div>
+<div id="Supercharger" style="width:80%;height:500px;top:100px;"></div>
 </body>
 <script type="text/javascript">
     (function ($) {
@@ -38,6 +38,22 @@
             if (r != null) return unescape(r[2]); return null;
         }
     })(jQuery);
+    function todate(x) {
+        //alert(JSON.stringify(x))
+        var date=x.更新时间.split("/");
+        var day=date[0];
+        var hour=date[1];
+        var minute=date[2];
+        var res_str=day+" "+hour+":"+minute+":00"
+        var res=new Date(res_str)
+        //alert(res_str)
+        return res
+    }
+    function up(x,y){
+        var Datex=todate(x)
+        var Datey=todate(y)
+        return Datex-Datey
+    }
     $(document).ready(function() {
         var id=$.getUrlParam('id');
         var cold_Chart = echarts.init(document.getElementById('cold_water'));
@@ -49,7 +65,8 @@
             success: function(response) {
                 data_time=[];
                 data_tem=[];
-                //alert(JSON.stringify(response["res"]))
+                response["res"].sort(up)
+                
                 for(var d in response["res"]){
                     data_time.push(response["res"][d]["更新时间"]);
                     data_tem.push(response["res"][d]["气缸冷却水温度"]);
@@ -145,6 +162,7 @@
             success: function(response) {
                 data_time=[];
                 data_tem=[];
+                response["res"].sort(up)
                 for(var d in response["res"]){
                     data_time.push(response["res"][d]["更新时间"]);
                     data_tem.push(response["res"][d]["柴油量"]);
@@ -240,6 +258,7 @@
                 data_time=[];
                 data_tem=[];
                 data_round=[];
+                response["res"].sort(up)
                 for(var d in response["res"]){
                     data_time.push(response["res"][d]["更新时间"]);
                     data_tem.push(response["res"][d]["增压器压强"]);
