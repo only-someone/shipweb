@@ -140,11 +140,14 @@
             data: {shipname: name},
             dataType: "json",
             success: function (response) {
-              if(JSON.stringify(response["res"])==="[]"){
-                alert("未找到船舶")
-              }
-              else if(response["res"].length!=1){
+
+              if(response["res"].length!=1){
                 alert("存在同名船舶")
+                window.location.href = "/ships";
+              }
+              else if(JSON.stringify(response["res"])==="[]"){
+                alert("未找到船舶")
+                window.location.href = "/ships";
               }
               else{window.location.href = "/trace?id=" + response["res"][0]["MMSI"];}
 
