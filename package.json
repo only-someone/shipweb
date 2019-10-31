@@ -14,7 +14,7 @@
     "express": "^4.16.4",
     "http-errors": "~1.6.2",
     "mongodb": "^2.2.33",
-    "mongoose": "~5.4.19",
+    "mongoose": "~5.7.5",
     "morgan": "~1.9.0",
     "multer": "^1.4.1",
     "prettier": "^1.16.4",
